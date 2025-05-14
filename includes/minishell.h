@@ -14,6 +14,13 @@
 #include <errno.h>
 #include "./libft.h"
 
+typedef enum e_quotes_type
+{
+	NO_QUOTE,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE
+}	t_quotes;
+
 typedef struct s_data
 {
 	char	*input;
