@@ -17,6 +17,7 @@ SRC_FILES = \
 	src/built_ins/pwd_command.c \
 	src/built_ins/echo_command.c \
 	src/user_input/opening_minishell.c \
+	src/parsing/parse.c
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
