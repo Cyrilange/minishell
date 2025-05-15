@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
-
-/*#define MAX_ARGS 1024
+/*
+#define MAX_ARGS 1024
 
 
 #include <stdio.h>
@@ -10,7 +10,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <errno.h>
-//#include "./libft.h"
+
 
 typedef enum e_quotes_type
 {
@@ -24,9 +24,65 @@ typedef struct s_data
 	char	*input;
 	char	**args;
 	int		i;
-}	t_data; */
+}	t_data; 
 
-static char	*parse_redirection(t_data *data)
+typedef struct s_token {
+    char     *value;
+    t_quotes quote_type;
+} t_token;
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	size_t	i;
+	char	*dup;
+
+	dup = malloc(sizeof(char) * (n + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (i < n && s[i])
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '"');
+}
+
+int	is_special(char c)
+{
+	return (c == '>' || c == '<' || c == '|');
+}
+
+t_token *create_token(char *value, t_quotes quote_type) //fonction dans helper
+{
+	t_token *token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return NULL;
+	token->value = value;
+	token->quote_type = quote_type;
+	return token;
+} 
+
+*/
+//#-------------------------------------------------#
+static t_quotes	get_quote_type(char c)
+{
+	if (c == '\'')
+		return SINGLE_QUOTE;
+	if (c == '"')
+		return DOUBLE_QUOTE;
+	return NO_QUOTE;
+}
+
+static t_token	*parse_redirection(t_data *data)
 {
 	int	start;
 
@@ -35,36 +91,32 @@ static char	*parse_redirection(t_data *data)
 		data->i += 2;
 	else
 		data->i++;
-	return ft_strndup(&data->input[start], data->i - start);
+	return create_token(ft_strndup(&data->input[start], data->i - start), NO_QUOTE);
 }
 
-static char	*parse_quote(t_data *data)
+static t_token	*parse_quote(t_data *data)
 {
-	int		start;
-	int		len;
+	int			start;
+	int			len;
 	t_quotes	quote;
 
-	quote = NO_QUOTE;
-	if (data->input[data->i] == '\'')
-		quote = SINGLE_QUOTE;
-	else if (data->input[data->i] == '"')
-		quote = DOUBLE_QUOTE;
+	quote = get_quote_type(data->input[data->i]);
 	data->i++;
 	start = data->i;
+
 	while (data->input[data->i])
 	{
-		if ((quote == SINGLE_QUOTE && data->input[data->i] == '\'') ||
-			(quote == DOUBLE_QUOTE && data->input[data->i] == '"'))
+		if (get_quote_type(data->input[data->i]) == quote)
 			break;
 		data->i++;
 	}
 	len = data->i - start;
 	if (data->input[data->i])
 		data->i++;
-	return ft_strndup(&data->input[start], len);
+	return create_token(ft_strndup(&data->input[start], len),quote);
 }
 
-static char	*parse_word(t_data *data)
+static t_token	*parse_word(t_data *data)
 {
 	int	start;
 	int	len;
@@ -79,10 +131,10 @@ static char	*parse_word(t_data *data)
 		data->i++;
 		len++;
 	}
-	return ft_strndup(&data->input[start], len);
+	return create_token(ft_strndup(&data->input[start], len), NO_QUOTE);
 }
 
-static char	*extract_token(t_data *data)
+static t_token	*extract_token(t_data *data)
 {
 	char c;
 
@@ -95,57 +147,66 @@ static char	*extract_token(t_data *data)
 }
 
 
-char **tokenize_input(char *input)
+t_token **tokenize_input(char *input)
 {
 	t_data data;
-	int arg_i;
-	data.input;
-	data.args;
+	t_token **tokens;
+	int i;
 
 	data.input = input;
-	arg_i = 0;
 	data.i = 0;
-	data.args = malloc(sizeof(char *) * MAX_ARGS);
-	if (!data.args)
+	tokens = malloc(sizeof(t_token *) * MAX_ARGS);
+	if (!tokens)
 		return NULL;
 
+	i = 0;
 	while (input[data.i])
 	{
 		while (isspace(input[data.i]))
 			data.i++;
 		if (!input[data.i])
 			break;
-		data.args[arg_i++] = extract_token(&data);
+		tokens[i++] = extract_token(&data);
 	}
-	data.args[arg_i] = NULL;
-	return data.args;
+	tokens[i] = NULL;
+	return tokens;
 }
 /*
-
-int main(void)
+//print token
+void	print_token(t_token *token)
 {
-	char input[1024];
+	printf("Token: [%s] | Quote Type: ", token->value);
+	if (token->quote_type == SINGLE_QUOTE)
+		printf("SINGLE_QUOTE");
+	else if (token->quote_type == DOUBLE_QUOTE)
+		printf("DOUBLE_QUOTE");
+	else
+		printf("NO_QUOTE");
+	printf("\n");
+}
 
-	while (1)
+//test
+int	main(void)
+{
+	char		*line1 = "echo > 'hello world' \"42 Málaga\" test";
+	t_token		**tokens;
+	int			i;
+
+	tokens = tokenize_input(line1);
+	if (!tokens)
 	{
-		printf("\nEnter CMD : ");
-		if (!fgets(input, sizeof(input), stdin))
-			break;
-		input[strcspn(input, "\n")] = '\0';
-
-		char **tokens = tokenize_input(input);
-		if (!tokens)
-		{
-			printf("Erreur d'allocation\n");
-			continue;
-		}
-
-		printf("Tokens :\n");
-		for (int j = 0; tokens[j]; j++)
-			printf("  [%d]: %s\n", j, tokens[j]);
-		for (int j = 0; tokens[j]; j++)
-			free(tokens[j]);
-		free(tokens);
+		printf("Error tokenisation.\n");
+		return (1);
 	}
-	return 0;
-}  */
+
+	i = 0;
+	while (tokens[i])
+	{
+		print_token(tokens[i]);
+		free(tokens[i]->value);
+		free(tokens[i]);
+		i++;
+	}
+	free(tokens);
+	return (0);
+} */
