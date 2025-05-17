@@ -24,51 +24,73 @@ int	is_builtin(const char *cmd)
 }
 int	execute_builtin(char **args)
 {
-	if (strcmp(args[0], "cd") == 0)
+	if (ft_strcmp(args[0], "cd") == 0)
 		return ft_cd(args[1]);
-	else if (strcmp(args[0], "echo") == 0)
+	else if (ft_strcmp(args[0], "echo") == 0)
         return ft_echo(args);
-	else if (strcmp(args[0], "pwd") == 0)
+	else if (ft_strcmp(args[0], "pwd") == 0)
         return ft_pwd();
 	return 0;
 }
 
 
+
+
 void command(char *input)
 {
-	if (!input || !*input) 
-		return;
-	char *token = strtok(input, " \t\n"); //need praseing
-	if (!token)
-		return;
-	char *word = strtok(input, " \t\n"); //need parsing
-	int i = 0;
-	char **args = malloc(sizeof(char *) * (MAX_ARGS + 1));
-	while (word && i < MAX_ARGS)
-	{
-		args[i] = word;
-		i++;
-		word = strtok(word + ft_strlen(args[i - 1]), " \t\n"); //need parsing
-	}
-	args[i] = NULL;
-	i = 0;
-	/*while (args[i])
-	{
-		printf("%s\n", args[i]);
-		i++;
-	}*/
-	if (is_builtin(args[0]))
-	{
-		execute_builtin(args);
-	}
-	else
-	{
-		write(2, "minishell: ", 11);
-		write(2, args[0], ft_strlen(args[0]));
-		write(2, ": command not found\n", 21);
-	}
+	t_token **tokens;
+    char **args;
+    int i;
+    if (!input || !*input)
+        return;
+    tokens = tokenize_input(input);
+    if (!tokens)
+        return;
+    args = malloc(sizeof(char *) * (MAX_ARGS + 1));
+    if (!args)
+    {
+        i = 0;
+        while (tokens[i])
+        {
+            free(tokens[i]->value);
+            free(tokens[i]);
+            i++;
+        }
+        free(tokens);
+        return;
+    }
+    i = 0;
+    while (tokens[i] && i < MAX_ARGS)
+    {
+		if (tokens[i]->quote_type != SINGLE_QUOTE)
+        	args[i] = expand_variables(tokens[i]->value, tokens[i]->quote_type);
+    	else
+        	args[i] = ft_strdup(tokens[i]->value);
+    i++;
+    }
+    args[i] = NULL;
 
-	free(args);
+    if (args[0] && is_builtin(args[0]))
+    {
+        execute_builtin(args);
+    }
+    else
+    {
+        if (args[0])
+        {
+            write(2, "minishell: ", 11);
+            write(2, args[0], ft_strlen(args[0]));
+            write(2, ": command not found\n", 21);
+        }
+    }
+    i = 0;
+    while (tokens[i])
+    {
+        free(tokens[i]);
+        i++;
+    }
+    free(tokens);
+    free(args);
 }
 //acascws
 
@@ -78,18 +100,10 @@ char	*get_input()
     char *cwd = getenv("PWD");
 
     if (cwd)
-    {
         printf("\033[0;32mminishell> \033[0;34m%s\033[0m $ ", cwd);
-    }
     else
-    {
         printf("\033[0;32mminishell> \033[0m$ ");
-    }
-
     input.input = readline(NULL);
-
-	//printf("%s\n", input.input);
-
     if (!input.input)
     {
         printf("exit\n");
