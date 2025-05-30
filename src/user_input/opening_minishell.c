@@ -39,79 +39,93 @@ int	execute_builtin(char **args)
 void command(char *input)
 {
 	t_token **tokens;
-    char **args;
-    int i;
+    t_cmd_node *cmds;
+    t_cmd_node *tmp;
+
     if (!input || !*input)
         return;
+
     tokens = tokenize_input(input);
     if (!tokens)
         return;
-    args = malloc(sizeof(char *) * (MAX_ARGS + 1));
-    if (!args)
-    {
-        i = 0;
-        while (tokens[i])
-        {
-            free(tokens[i]->value);
-            free(tokens[i]);
-            i++;
-        }
-        free(tokens);
-        return;
-    }
-    i = 0;
-    while (tokens[i] && i < MAX_ARGS)
-    {
-		if (tokens[i]->quote_type != SINGLE_QUOTE)
-        	args[i] = expand_variables(tokens[i]->value, tokens[i]->quote_type);
-    	else
-        	args[i] = ft_strdup(tokens[i]->value);
-    i++;
-    }
-    args[i] = NULL;
 
-    if (args[0] && is_builtin(args[0]))
+    cmds = parse_pipeline_tokens(tokens);
+
+    tmp = cmds;
+    while (tmp)
     {
-        execute_builtin(args);
-    }
-    else
-    {
-        if (args[0])
+        printf("== Commande détectée ==\n");
+        for (int j = 0; tmp->cmd->args && tmp->cmd->args[j]; j++)
+	        printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
+        if (tmp->cmd->infile)
+	            printf("Infile: %s\n", tmp->cmd->infile);
+        if (tmp->cmd->outfile)
+	        printf("Outfile: %s\n", tmp->cmd->outfile);
+        if (tmp->cmd->args && tmp->cmd->args[0])
         {
-            write(2, "minishell: ", 11);
-            write(2, args[0], ft_strlen(args[0]));
-            write(2, ": command not found\n", 21);
+            if (is_builtin(tmp->cmd->args[0]))
+                execute_builtin(tmp->cmd->args);
+            else
+            {
+                fprintf(stderr, "Commande non builtin : %s\n", tmp->cmd->args[0]);
+            }
         }
+        tmp = tmp->next;
     }
-    i = 0;
+    free_cmd_list(cmds);
+    int i = 0;
     while (tokens[i])
     {
+        free(tokens[i]->value);
         free(tokens[i]);
         i++;
     }
     free(tokens);
-    free(args);
 }
 //acascws
 
+void free_cmd_list(t_cmd_node *cmds)
+{
+    t_cmd_node *tmp;
+    while (cmds)
+    {
+        tmp = cmds->next;
+        // Libère les args
+        if (cmds->cmd)
+        {
+            if (cmds->cmd->args)
+            {
+                for (int i = 0; cmds->cmd->args[i]; i++)
+                    free(cmds->cmd->args[i]);
+                free(cmds->cmd->args);
+            }
+            free(cmds->cmd->infile);
+            free(cmds->cmd->outfile);
+            free(cmds->cmd);
+        }
+        free(cmds);
+        cmds = tmp;
+    }
+}
+
+
 char	*get_input()
 {
-	t_data input;
-    char *cwd = getenv("PWD");
-
-    if (cwd)
-        printf("\033[0;32mminishell> \033[0;34m%s\033[0m $ ", cwd);
-    else
-        printf("\033[0;32mminishell> \033[0m$ ");
-    input.input = readline(NULL);
-    if (!input.input)
-    {
-        printf("exit\n");
-        exit(0);
-    }
-
-    if (input.input && *(input.input))
-        add_history(input.input);
-
-    return input.input;
+	t_prompt input;
+	char *cwd;
+	
+	cwd = getenv("PWD");
+	if (cwd)
+		printf("\033[0;32mminishell> \033[0;34m%s\033[0m $ ", cwd);
+	else
+		printf("\033[0;32mminishell> \033[0m$ ");
+	input.input = readline(NULL);
+	if (!input.input)
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	if (input.input && *(input.input))
+		add_history(input.input);
+	return input.input;
 }

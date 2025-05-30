@@ -62,7 +62,7 @@ char *expand_variables(const char *str, t_quotes quote_type)
                 if (!value)
                     value = "";
                 result = append_str(result, value);
-                i += len;
+                i += len;  
             }
             else
                 result = append_str(result, "$");

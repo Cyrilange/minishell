@@ -10,6 +10,16 @@ int	is_special(char c)
 	return (c == '>' || c == '<' || c == '|');
 }
 
+
+t_quotes	get_quote_type(char c)
+{
+	if (c == '\'')
+		return SINGLE_QUOTE;
+	if (c == '"')
+		return DOUBLE_QUOTE;
+	return NO_QUOTE;
+}
+
 t_token *create_token(char *value, t_quotes quote_type)
 {
 	t_token *token;

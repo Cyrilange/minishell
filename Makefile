@@ -20,6 +20,7 @@ SRC_FILES = \
 	src/parsing/tokenise.c \
 	src/parsing/helper_functions.c \
 	src/parsing/variables.c \
+	src/parsing/pipes.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
