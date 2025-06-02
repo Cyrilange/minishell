@@ -12,7 +12,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <errno.h>
-#include "./libft.h"
+#include "./libft/libft.h"
 
 typedef enum e_quotes_type
 {
