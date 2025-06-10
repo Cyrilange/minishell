@@ -1,9 +1,6 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
-
-
 #define MAX_ARGS 1024
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +9,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <errno.h>
+#include <string.h>
 #include "./libft/libft.h"
+#include "../src/miniutils/miniutils.h"
 
 typedef enum e_quotes_type
 {
@@ -24,7 +23,9 @@ typedef enum e_quotes_type
 typedef struct s_prompt
 {
 	char	*input;
-	int		i;
+	char    **envp; // i need to get environment variables from the main func
+	int		i; // what is this for?
+	pid_t pid; // process ID of the minishell instance
 }	t_prompt;
 
 typedef struct s_token {
@@ -45,20 +46,27 @@ typedef struct s_cmd_node { //use for pipe to c reate a next cmd
 	struct s_cmd_node *next;
 } t_cmd_node;
 
-int	is_builtin(const char *cmd);
-void command(char *input);
+bool is_builtin(char *command);
+void command(char *input, char ***envp);
 char *get_input();
 
 
-
-int ft_cd(char *path);
-
+// builtins
+int builtin_env(char **envp);
+int builtin_unset(char **command, char ***envp);
+int builtin_export(char **command, char ***envp);
+int builtin_pwd(void);
+int builtin_cd(char *path);
+int builtin_echo(char **args);
+int builtin_exit(char **command);
 
 void update_pwd(void);
-int ft_pwd(void);
+
+
+int is_in_envp(char *arg, char **envp);
+char *get_var_name(char *arg);
 
 t_quotes	get_quote_type(char c);
-int ft_echo(char **args);
 t_token **tokenize_input(char *input);
 t_token *create_token(char *value, t_quotes quote_type);
 char *expand_variables(const char *str, t_quotes quote_type);

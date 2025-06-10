@@ -14,7 +14,7 @@ void update_pwd(void)
     }
 }
 
-int ft_pwd(void)
+int builtin_pwd(void)
 {
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)))
