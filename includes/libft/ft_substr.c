@@ -36,23 +36,3 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	ft_strlcpy(str, &s[start], len + 1);
 	return (str);
 }
-/*
-
-int main() {
-    const char *original = "Bonjour, monde!";
-    unsigned int start = 1;
-    size_t len = 9; 
-
-    
-    char *substring = ft_substr(original, start, len);
-
-    if (substring != NULL) {
-        printf("substring : %s\n", substring);
-     
-        free(substring);
-    } else {
-        printf("error doc.\n");
-    }
-
-    return 0;
-}*/

@@ -1,42 +1,25 @@
-#include "../includes/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "../../includes/minishell.h"
 
-#include <string.h>
-
-int	is_builtin(const char *cmd)
-{
-	if (!cmd)
-		return (0);
-	return (
-		strcmp(cmd, "cd") == 0 ||
-		strcmp(cmd, "echo") == 0 ||
-		strcmp(cmd, "exit") == 0 ||
-		strcmp(cmd, "pwd") == 0 ||
-		strcmp(cmd, "export") == 0 ||
-		strcmp(cmd, "unset") == 0 ||
-		strcmp(cmd, "env") == 0
-	);
-}
-int	execute_builtin(char **args)
+int	execute_builtin(char **args, char ***envp)
 {
 	if (ft_strcmp(args[0], "cd") == 0)
-		return ft_cd(args[1]);
+		return builtin_cd(args[1]);
 	else if (ft_strcmp(args[0], "echo") == 0)
-        return ft_echo(args);
+        return builtin_echo(args); // working
 	else if (ft_strcmp(args[0], "pwd") == 0)
-        return ft_pwd();
+        return builtin_pwd(); // working
+	else if (ft_strcmp(args[0], "exit") == 0)
+        return builtin_exit(args); // working
+	else if (ft_strcmp(args[0], "export") == 0)
+        return builtin_export(args, envp); // not working
+	else if (ft_strcmp(args[0], "unset") == 0)
+        return builtin_unset(args, envp); // not working
+	else if (ft_strcmp(args[0], "env") == 0)
+        return builtin_env(*envp); // working
 	return 0;
 }
 
-
-
-
-void command(char *input)
+void command(char *input, char ***envp)
 {
 	t_token **tokens;
     t_cmd_node *cmds;
@@ -64,7 +47,7 @@ void command(char *input)
         if (tmp->cmd->args && tmp->cmd->args[0])
         {
             if (is_builtin(tmp->cmd->args[0]))
-                execute_builtin(tmp->cmd->args);
+                execute_builtin(tmp->cmd->args, envp);
             else
             {
                 fprintf(stderr, "Commande non builtin : %s\n", tmp->cmd->args[0]);

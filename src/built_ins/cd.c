@@ -36,7 +36,7 @@ static int cd_error(char *path)
     return 1;
 }
 
-int ft_cd(char *path)
+int builtin_cd(char *path)
 {
     if (!path || *path == '\0')
         return cd_home();
