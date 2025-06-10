@@ -69,6 +69,8 @@ int builtin_unset(char **command, char ***envp)
 		i = 1;  // set i to start counting in the first arg
 		while(command[i] != NULL)
 		{
+			if (strchr(command[i], '=') != NULL) // if name contains =, do nothing
+				return 0;
 			varname = get_var_name(command[i]);
 			var_position = is_in_envp(varname, *envp); // search var inside envp
 			if (var_position == -1) // if var was not found
