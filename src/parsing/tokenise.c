@@ -59,10 +59,16 @@ static t_token	*extract_token(t_prompt *data)
 	c = data->input[data->i];
 	if (c == '>' || c == '<')
 		return parse_redirection(data);
+	if (c == '|')
+	{
+		data->i++;
+		return create_token(ft_strdup("|"), NO_QUOTE);
+	}
 	if (c == '\'' || c == '"')
 		return parse_quote(data);
 	return parse_word(data);
 }
+
 
 
 t_token **tokenize_input(char *input)
