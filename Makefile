@@ -2,8 +2,8 @@ NAME        = minishell
 
 LIBFT       = ./includes/libft
 
-CC          = gcc
-CFLAGS      = -g -Wall -Werror -Wextra -I$(LIBFT) -I./includes
+CC          = cc # it has to be cc, not gcc
+CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes
 LDFLAGS     = -lreadline
 
 
@@ -13,10 +13,19 @@ OBJ_DIR     = ./obj
 # List source files with path
 SRC_FILES = \
 	src/main.c \
-	src/built_ins/cd_command.c \
-	src/built_ins/pwd_command.c \
-	src/built_ins/echo_command.c \
+	src/built_ins/builtins.c \
+	src/built_ins/cd.c \
+	src/built_ins/pwd.c \
+	src/built_ins/echo.c \
+	src/built_ins/env.c \
+	src/built_ins/exit.c \
+	src/built_ins/export_and_unset.c \
+	src/miniutils/matrix_str.c \
 	src/user_input/opening_minishell.c \
+	src/parsing/tokenise.c \
+	src/parsing/helper_functions.c \
+	src/parsing/variables.c \
+	src/parsing/pipes.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

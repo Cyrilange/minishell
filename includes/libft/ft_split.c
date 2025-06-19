@@ -12,24 +12,6 @@
 
 #include "libft.h"
 
-static char	*ft_strndup(const char *src, size_t n)
-{
-	char	*dup;
-	size_t	i;
-
-	dup = malloc(n + 1);
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < n && src[i])
-	{
-		dup[i] = src[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-
 static int	num_words(const char *s, char c)
 {
 	int	num;
