@@ -1,97 +1,115 @@
 #include "../includes/minishell.h"
 
-static t_token	*parse_redirection(t_prompt *data)
+static t_token *parse_redirection(t_prompt *data)
 {
-	int	start;
-
+	int start;
+	
 	start = data->i;
+	// If the current and next characters are the same, it's a double redirection
 	if (data->input[data->i + 1] && data->input[data->i] == data->input[data->i + 1])
-		data->i += 2;
+		data->i += 2; // move index forward by 2
 	else
-		data->i++;
+		data->i++; // otherwise, single redirection, move forward by 1
+	// Create a token for the redirection operator
 	return create_token(ft_strndup(&data->input[start], data->i - start), NO_QUOTE);
 }
 
-static t_token	*parse_quote(t_prompt *data)
+// Parses quoted strings: 'single quotes' or "double quotes"
+static t_token *parse_quote(t_prompt *data)
 {
 	int			start;
 	int			len;
 	t_quotes	quote;
 
+	// Detect the type of quote (' or ")
 	quote = get_quote_type(data->input[data->i]);
-	data->i++;
+	data->i++; // skip the opening quote
 	start = data->i;
-
-	while (data->input[data->i])
+	while (data->input[data->i])// Loop until the matching closing quote is found
 	{
 		if (get_quote_type(data->input[data->i]) == quote)
 			break;
 		data->i++;
 	}
 	len = data->i - start;
-	if (data->input[data->i])
+	if (data->input[data->i])// Skip the closing quote if it exists
 		data->i++;
-	return create_token(ft_strndup(&data->input[start], len),quote);
+	return create_token(ft_strndup(&data->input[start], len), quote);// Create a token with the quoted content and its quote type
 }
 
-static t_token	*parse_word(t_prompt *data)
+// Parses normal words (commands, arguments, etc.)
+static t_token *parse_word(t_prompt *data)
 {
-	int	start;
+	int start;
 	int	len;
-
+	
 	start = data->i;
 	len = 0;
-	while (data->input[data->i] &&
+	while (data->input[data->i] &&// Loop until reaching space, quote, or a special character
 		!isspace((unsigned char)data->input[data->i]) &&
 		!is_quote(data->input[data->i]) &&
 		!is_special(data->input[data->i]))
 	{
 		data->i++;
 		len++;
-	}
-	return create_token(ft_strndup(&data->input[start], len), NO_QUOTE);
+	}	
+	return create_token(ft_strndup(&data->input[start], len), NO_QUOTE);// Create a token for the word
 }
 
-static t_token	*extract_token(t_prompt *data)
+static t_token	*extract_token(t_prompt *data)// Determines the type of token based on the current character and calls the appropriate parsing function
 {
 	char c;
 
-	c = data->input[data->i];
+	c = data->input[data->i];// Get the current character from the input string.
+	// Case 1: Redirection symbols (exemple., ">", ">>", "<", "<<")
+    // If the current character is '>' or '<', we may be starting a redirection operator.
+    // This can be either a single or double redirection.
 	if (c == '>' || c == '<')
-		return parse_redirection(data);
+		return parse_redirection(data);// Handle and return the redirection token
+	// Case 2: Pipe character '|'
+    // If we encounter a pipe, it represents a command separator in a pipeline.
 	if (c == '|')
 	{
-		data->i++;
-		return create_token(ft_strdup("|"), NO_QUOTE);
+		data->i++; // Skip the pipe character
+		return create_token(ft_strdup("|"), NO_QUOTE);// Create a token with value "|" and no quotes
+
 	}
+	// Case 3: Quoted strings
+    // If the character is a quote (single or double), we parse it accordingly.
 	if (c == '\'' || c == '"')
 		return parse_quote(data);
+	// Case 4: Regular word 
+    // If it's none of the above, assume it's a regular word 
 	return parse_word(data);
 }
 
 
 
-t_token **tokenize_input(char *input)
+t_token **tokenize_input(char *input) // Tokenizes the input string into an array of t_token pointers
 {
-	t_prompt data;
-	t_token **tokens;
-	int i;
+	t_prompt data;        // Temporary struct to track parsing state
+	t_token **tokens;     // Array of token pointers to return
+	int i;                // Token index
 
-	data.input = input;
-	data.i = 0;
+	// Initialize the input for parsing
+	data.input = input;   // The full string to be tokenized
+	data.i = 0;           // Start index for scanning the input
+	// Allocate memory for the maximum possible number of tokens
+	// MAX_ARGS is a predefined constant (like 1024), representing the max number of tokens expected
 	tokens = malloc(sizeof(t_token *) * MAX_ARGS);
 	if (!tokens)
 		return NULL;
 
-	i = 0;
+	i = 0;// Start filling the tokens array at index 0
+	// Loop through the input string
 	while (input[data.i])
 	{
-		while (isspace(input[data.i]))
+		while (isspace(input[data.i]))// Skip all whitespace characters between tokens
 			data.i++;
-		if (!input[data.i])
+		if (!input[data.i])// If we reach the end after skipping spaces, break out of the loop
 			break;
-		tokens[i++] = extract_token(&data);
+		tokens[i++] = extract_token(&data);// Use `extract_token()` to detect and create the next token based on the current character
 	}
-	tokens[i] = NULL;
-	return tokens;
+	tokens[i] = NULL;	// Null-terminate the token array (important for later iteration)
+	return tokens;// return the array of tokens
 }
