@@ -2,7 +2,13 @@
 
 static void init_parse(t_cmd **cmd, char ***args, int *arg_i)
 {
-    *cmd = calloc(1, sizeof(t_cmd));
+    *cmd = calloc(1, sizeof(t_cmd)); // Initialize command structure
+    (*cmd)->infile = NULL;
+    (*cmd)->outfile = NULL;
+    (*cmd)->append = 0;
+    (*cmd)->heredoc = 0;
+    *arg_i = 0;
+    // Allocate memory for arguments, allowing for a maximum of MAX_ARGS + 1 (to include NULL terminator)
     *args = malloc(sizeof(char *) * (MAX_ARGS + 1));
     *arg_i = 0;
 }

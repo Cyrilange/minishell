@@ -19,44 +19,51 @@ int	execute_builtin(char **args, char ***envp)
 	return 0;
 }
 
-void command(char *input, char ***envp)
+static void execute_cmds(t_cmd_node *cmds, char ***envp)
 {
-	t_token **tokens;
-    t_cmd_node *cmds;
-    t_cmd_node *tmp;
+    t_cmd_node	*tmp;
+    int			j;
 
-    if (!input || !*input)
-        return;
-
-    tokens = tokenize_input(input);
-    if (!tokens)
-        return;
-
-    cmds = parse_pipeline_tokens(tokens);
-
-    tmp = cmds;
+	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
-        printf("== Commande détectée ==\n");
-        for (int j = 0; tmp->cmd->args && tmp->cmd->args[j]; j++)
-	        printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
-        if (tmp->cmd->infile)
-	            printf("Infile: %s\n", tmp->cmd->infile);
-        if (tmp->cmd->outfile)
-	        printf("Outfile: %s\n", tmp->cmd->outfile);
-        if (tmp->cmd->args && tmp->cmd->args[0])
+        j = 0;
+        while (tmp->cmd->args && tmp->cmd->args[j])// Print all arguments
+        {
+            printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
+            j++;
+        }     
+        if (tmp->cmd->infile)// Print infile if present
+            printf("Infile: %s\n", tmp->cmd->infile);     
+        if (tmp->cmd->outfile)// Print outfile if present
+            printf("Outfile: %s\n", tmp->cmd->outfile);
+        if (tmp->cmd->args && tmp->cmd->args[0])// Execute command
         {
             if (is_builtin(tmp->cmd->args[0]))
                 execute_builtin(tmp->cmd->args, envp);
             else
-            {
                 fprintf(stderr, "Commande non builtin : %s\n", tmp->cmd->args[0]);
-            }
-        }
-        tmp = tmp->next;
+        }     
+        tmp = tmp->next;// Move to next command in pipeline
     }
-    free_cmd_list(cmds);
-    int i = 0;
+}
+
+
+void command(char *input, char ***envp)
+{
+    t_token 	**tokens;
+    t_cmd_node	*cmds;
+	int 		i;
+
+    if (!input || !*input)
+        return;
+    tokens = tokenize_input(input);
+    if (!tokens)
+        return;
+    cmds = parse_pipeline_tokens(tokens);
+    execute_cmds(cmds, envp);// execute commands
+    free_cmd_list(cmds);//clean cmds
+    i = 0;
     while (tokens[i])
     {
         free(tokens[i]->value);
@@ -65,6 +72,7 @@ void command(char *input, char ***envp)
     }
     free(tokens);
 }
+
 //acascws
 
 void free_cmd_list(t_cmd_node *cmds)
@@ -73,7 +81,6 @@ void free_cmd_list(t_cmd_node *cmds)
     while (cmds)
     {
         tmp = cmds->next;
-        // Libère les args
         if (cmds->cmd)
         {
             if (cmds->cmd->args)
