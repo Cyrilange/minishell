@@ -47,8 +47,9 @@ t_cmd_node *parse_pipeline_tokens(t_token **tokens)
     t_cmd *cmd;
     char **args;
     int arg_i;
-    int i = 0;
-
+    int i;
+    
+    i = 0;
     init_parse(&cmd, &args, &arg_i);
 
     while (tokens[i])
@@ -92,8 +93,6 @@ t_cmd_node *parse_pipeline_tokens(t_token **tokens)
             process_token(tokens[i], args, &arg_i);
         i++;
     }
-
-
     add_cmd_node(&cmds, &last, cmd, args, arg_i);
     return cmds;
 }

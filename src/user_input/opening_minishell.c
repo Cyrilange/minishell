@@ -27,12 +27,12 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
-        j = 0;
-        while (tmp->cmd->args && tmp->cmd->args[j])// Print all arguments
-        {
-            printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
-            j++;
-        }     
+       // j = 0;
+       // while (tmp->cmd->args && tmp->cmd->args[j])// Print all arguments
+       // {
+        //    printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
+        //    j++;
+       // }     
         if (tmp->cmd->infile)// Print infile if present
             printf("Infile: %s\n", tmp->cmd->infile);     
         if (tmp->cmd->outfile)// Print outfile if present
@@ -57,14 +57,14 @@ void command(char *input, char ***envp)
 
     if (!input || !*input)
         return;
-    tokens = tokenize_input(input);
+    tokens = tokenize_input(input); // Tokenize the input string
     if (!tokens)
         return;
     cmds = parse_pipeline_tokens(tokens);
     execute_cmds(cmds, envp);// execute commands
     free_cmd_list(cmds);//clean cmds
     i = 0;
-    while (tokens[i])
+    while (tokens[i]) // Free each token
     {
         free(tokens[i]->value);
         free(tokens[i]);

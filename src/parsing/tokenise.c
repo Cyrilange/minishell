@@ -10,8 +10,7 @@ static t_token *parse_redirection(t_prompt *data)
 		data->i += 2; // move index forward by 2
 	else
 		data->i++; // otherwise, single redirection, move forward by 1
-	// Create a token for the redirection operator
-	return create_token(ft_strndup(&data->input[start], data->i - start), NO_QUOTE);
+	return create_token(ft_strndup(&data->input[start], data->i - start), NO_QUOTE);// Create a token for the redirection operator
 }
 
 // Parses quoted strings: 'single quotes' or "double quotes"
@@ -21,15 +20,14 @@ static t_token *parse_quote(t_prompt *data)
 	int			len;
 	t_quotes	quote;
 
-	// Detect the type of quote (' or ")
-	quote = get_quote_type(data->input[data->i]);
+	quote = get_quote_type(data->input[data->i]);// Detect the type of quote (' or ")
 	data->i++; // skip the opening quote
-	start = data->i;
+	start = data->i;// Store the starting index of the quoted content
 	while (data->input[data->i])// Loop until the matching closing quote is found
 	{
-		if (get_quote_type(data->input[data->i]) == quote)
+		if (get_quote_type(data->input[data->i]) == quote)// Check if the current character matches the opening quote type
 			break;
-		data->i++;
+		data->i++;// Move to the next character
 	}
 	len = data->i - start;
 	if (data->input[data->i])// Skip the closing quote if it exists
@@ -43,15 +41,15 @@ static t_token *parse_word(t_prompt *data)
 	int start;
 	int	len;
 	
-	start = data->i;
+	start = data->i;// Store the starting index of the word
 	len = 0;
 	while (data->input[data->i] &&// Loop until reaching space, quote, or a special character
 		!isspace((unsigned char)data->input[data->i]) &&
 		!is_quote(data->input[data->i]) &&
 		!is_special(data->input[data->i]))
 	{
-		data->i++;
-		len++;
+		data->i++;// Move to the next character
+		len++;// Increment the length of the word
 	}	
 	return create_token(ft_strndup(&data->input[start], len), NO_QUOTE);// Create a token for the word
 }
@@ -99,7 +97,6 @@ t_token **tokenize_input(char *input) // Tokenizes the input string into an arra
 	tokens = malloc(sizeof(t_token *) * MAX_ARGS);
 	if (!tokens)
 		return NULL;
-
 	i = 0;// Start filling the tokens array at index 0
 	// Loop through the input string
 	while (input[data.i])
