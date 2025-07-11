@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int    is_var_char(char c)
 {
@@ -37,7 +37,7 @@ static char *append_str(char *base, const char *add)// Append a string to anothe
     return new_str;// Return the new string
 }
 
-char *expand_variables(const char *str, t_quotes quote_type)// Expand variables in a string based on the quote type
+char *expand_variables(const char *str, t_quotes quote_type, char **envp)// Expand variables in a string based on the quote type
 {
     int	i;
 	int len;
@@ -61,7 +61,7 @@ char *expand_variables(const char *str, t_quotes quote_type)// Expand variables 
             {
                 len = 0;
                 char *var_name = is_var_name(&str[i], &len); // Extract the variable name
-                char *value = getenv(var_name); // Get the value of the variable from the environment
+                char *value = get_env_var_value(var_name, envp); // Get the value of the variable from the environment
                 free(var_name);
                 if (!value)
                     value = "";

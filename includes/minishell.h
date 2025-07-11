@@ -6,12 +6,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <errno.h>
 #include <string.h>
 #include "./libft/libft.h"
 #include "../src/miniutils/miniutils.h"
+#include <fcntl.h>
 
 typedef enum e_quotes_type
 {
@@ -65,13 +67,28 @@ void update_pwd(void);
 
 int is_in_envp(char *arg, char **envp);
 char *get_var_name(char *arg);
+char *get_env_var_value(char *var, char **envp);
 
 t_quotes	get_quote_type(char c);
 t_token **tokenize_input(char *input);
 t_token *create_token(char *value, t_quotes quote_type);
-char *expand_variables(const char *str, t_quotes quote_type);
+char *expand_variables(const char *str, t_quotes quote_type, char **envp);
 int	is_special(char c);
 int	is_quote(char c);
-t_cmd_node *parse_pipeline_tokens(t_token **tokens);
+t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp);
 void free_cmd_list(t_cmd_node *cmds);
+
+
+int	execute_builtin(char **args, char ***envp);
+void	redirect_outfile(char *fil, bool append);
+void	redirect_infile(char *fil);
+void execute_command(char **command, char ***envp);
+
+
+
+// search binary
+char	*get_path_variable(char **envp);
+char	*ret_path_if_exists(char **list_of_paths, char *program_name);
+int	get_cmd_path(char **envp, char **binpath, char *cmd);
+void	free_double_ptr(void **ptr);
 #endif

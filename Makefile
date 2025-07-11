@@ -21,11 +21,14 @@ SRC_FILES = \
 	src/built_ins/exit.c \
 	src/built_ins/export_and_unset.c \
 	src/miniutils/matrix_str.c \
-	src/user_input/opening_minishell.c \
+	src/miniutils/errors.c \
+	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
 	src/parsing/helper_functions.c \
 	src/parsing/variables.c \
 	src/parsing/pipes.c \
+	src/executor/redirections.c \
+	src/executor/search_binary.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
