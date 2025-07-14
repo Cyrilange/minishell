@@ -48,6 +48,7 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
                 exit(EXIT_FAILURE);
             }
             waitpid(pid, &g_status, 0); // parent proc
+            g_status = g_status / 256; // idk why waitpid multiplies the errcode by 256
 		}
         else
         {
