@@ -75,9 +75,14 @@ t_token *create_token(char *value, t_quotes quote_type);
 char *expand_variables(const char *str, t_quotes quote_type, char **envp);
 int	is_special(char c);
 int	is_quote(char c);
+//pipe 
 t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp);
 void free_cmd_list(t_cmd_node *cmds);
-
+void condition_while_pipe(t_token **tokens, int *i, t_cmd **cmd, char ***args,
+    int *arg_i, t_cmd_node **cmds, t_cmd_node **last, char **envp);
+void add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char **args, int arg_i);
+void init_parse(t_cmd **cmd, char ***args, int *arg_i);
+void process_token(t_token *token, char **args, int *arg_i, char **envp);
 
 int	execute_builtin(char **args, char ***envp);
 void	redirect_outfile(char *fil, bool append);

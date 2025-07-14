@@ -10,7 +10,6 @@ int	is_special(char c)
 	return (c == '>' || c == '<' || c == '|');
 }
 
-
 t_quotes	get_quote_type(char c)
 {
 	if (c == '\'')

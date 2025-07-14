@@ -26,37 +26,24 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
+{
+    pid_t pid = fork();
+    if (pid == 0)
     {
-        if (tmp->cmd->infile) // Print infile if present
-		{
-            pid_t pid = fork(); // fork
-			if (pid == 0) // child proc
-			{
-                redirect_infile(tmp->cmd->infile);
-                execute_command(tmp->cmd->args, envp);
-                exit(1);
-			}
-			else // parent proc
-                waitpid(pid, NULL, 0);
+        // Redirections
+        if (tmp->cmd->infile)
+            redirect_infile(tmp->cmd->infile);
+        if (tmp->cmd->outfile)
+            redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
 
-		}
-        else if (tmp->cmd->outfile) // Print outfile if present
-		{
-            pid_t pid = fork(); // fork
-			if (pid == 0) // child proc
-			{
-                printf("Outfile: %s\n", tmp->cmd->outfile);
-                redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
-                execute_command(tmp->cmd->args, envp);
-                exit(1);
-			}
-			else // parent proc
-                waitpid(pid, NULL, 0);
-		}
-        else
-			execute_command(tmp->cmd->args, envp);
-        tmp = tmp->next;// Move to next command in pipeline
+        // Exécute la commande
+        execute_command(tmp->cmd->args, envp);
+        exit(1);
     }
+    else
+        waitpid(pid, NULL, 0);
+    tmp = tmp->next;
+}
 }
 
 
