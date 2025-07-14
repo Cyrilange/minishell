@@ -36,31 +36,18 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
         }
         if (pid == 0)
         {
-            // Enfant : gère heredoc, redirections et exécute la commande
-
-            // Si heredoc présent, handle heredoc et redirige stdin depuis le fichier temporaire
             if (tmp->cmd->heredoc)
                 handle_heredoc_if_needed(tmp->cmd);
-            // Sinon, redirige stdin depuis infile s'il y en a
             else if (tmp->cmd->infile)
                 redirect_infile(tmp->cmd->infile);
-
-            // Redirection de la sortie si besoin
             if (tmp->cmd->outfile)
                 redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
-
-            // Exécute la commande (builtin ou execve)
             execute_command(tmp->cmd->args, envp);
-
-            // Si execve échoue, quitte proprement
-            perror("execute_command failed");
             exit(EXIT_FAILURE);
         }
         else
         {
-            // Parent attend la fin du fils et récupère le statut
             waitpid(pid, &g_status, 0);
-            // Tu peux stocker ou gérer le status globalement ici si besoin (ex: g_status = WEXITSTATUS(status);)
         }
         tmp = tmp->next;
     }
