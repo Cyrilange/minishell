@@ -1,4 +1,7 @@
 #include "../../includes/minishell.h"
+#include <stdio.h>
+
+extern int g_status;
 
 int	execute_builtin(char **args, char ***envp)
 {
@@ -26,24 +29,29 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
-{
-    pid_t pid = fork();
-    if (pid == 0)
     {
-        // Redirections
-        if (tmp->cmd->infile)
-            redirect_infile(tmp->cmd->infile);
-        if (tmp->cmd->outfile)
-            redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
+        if (tmp->cmd->infile || tmp->cmd->outfile) // only fork if there is a redirection
+        {
+            pid_t pid = fork();
+            if (pid == 0) // child proc
+            {
+                // Redirections
+                if (tmp->cmd->infile)
+                    redirect_infile(tmp->cmd->infile);
+                if (tmp->cmd->outfile)
+                    redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
 
-        // Exécute la commande
-        execute_command(tmp->cmd->args, envp);
-        exit(1);
-    }
-    else
-        waitpid(pid, NULL, 0);
+                // Exécute la commande
+                execute_command(tmp->cmd->args, envp);
+                exit(1);
+            }
+            else // parent proc
+                waitpid(pid, &g_status, 0); // wait for child to finish and set g_status
+        }
+        else
+            execute_command(tmp->cmd->args, envp);
     tmp = tmp->next;
-}
+    }
 }
 
 

@@ -51,6 +51,6 @@ int	get_cmd_path(char **envp, char **binpath, char *cmd)
 	*binpath = ret_path_if_exists(list_of_paths, cmd);
 	free_double_ptr((void **)list_of_paths);
 	if (*binpath == NULL)
-		return (ft_error("Executable not found\n", false), 4);
+		return (ft_error("Executable not found\n", false), 127);
 	return (0);
 }

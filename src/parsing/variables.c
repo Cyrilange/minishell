@@ -1,5 +1,7 @@
 #include "../../includes/minishell.h"
 
+extern int g_status;
+
 static int    is_var_char(char c)
 {
     return (ft_isalnum(c) || c == '_');// Check if character is alphanumeric or underscore
@@ -54,7 +56,7 @@ char *expand_variables(const char *str, t_quotes quote_type, char **envp)// Expa
             i++;
             if (str[i] == '?') //check for sepcial cases
             {
-                result = append_str(result, "0");// Append exit status (0 for now, can be updated later)
+                result = ft_itoa(g_status);// Append exit status
                 i++;
             }
             else if (isalpha(str[i]) || str[i] == '_') // If the next character is a valid variable name start
