@@ -28,26 +28,30 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 
     while (tmp)
     {
-        pid_t pid = fork();
-        if (pid == -1)
-        {
-            perror("fork failed");
-            exit(EXIT_FAILURE);
-        }
-        if (pid == 0)
-        {
-            if (tmp->cmd->heredoc)
-                handle_heredoc_if_needed(tmp->cmd);
-            else if (tmp->cmd->infile)
-                redirect_infile(tmp->cmd->infile);
-            if (tmp->cmd->outfile)
-                redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
-            execute_command(tmp->cmd->args, envp);
-            exit(EXIT_FAILURE);
-        }
+        if (tmp->cmd->heredoc || tmp->cmd->infile || tmp->cmd->outfile) // only fork if there is an infile, outfile, or heredoc
+		{
+            pid_t pid = fork();
+            if (pid == -1)
+            {
+                perror("fork failed");
+                exit(EXIT_FAILURE);
+            }
+            if (pid == 0) // child proc
+            {
+                if (tmp->cmd->heredoc)
+                    handle_heredoc_if_needed(tmp->cmd);
+                else if (tmp->cmd->infile)
+                    redirect_infile(tmp->cmd->infile);
+                if (tmp->cmd->outfile)
+                    redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
+                execute_command(tmp->cmd->args, envp);
+                exit(EXIT_FAILURE);
+            }
+            waitpid(pid, &g_status, 0); // parent proc
+		}
         else
         {
-            waitpid(pid, &g_status, 0);
+            execute_command(tmp->cmd->args, envp);
         }
         tmp = tmp->next;
     }
