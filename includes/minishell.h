@@ -40,6 +40,7 @@ typedef struct s_cmd {
 	char	*infile; // input file
 	char	*outfile; // output file
 	int		heredoc; // heredoc flag
+	char	*heredoc_delimiter; // delimiter for heredoc
 	int		append; // append flag
 }	t_cmd;
 
@@ -75,6 +76,12 @@ t_token *create_token(char *value, t_quotes quote_type);
 char *expand_variables(const char *str, t_quotes quote_type, char **envp);
 int	is_special(char c);
 int	is_quote(char c);
+
+//heredoc
+char *handle_heredoc(char *delimiter);
+void handle_heredoc_if_needed(t_cmd *cmd);
+
+
 //pipe 
 t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp);
 void free_cmd_list(t_cmd_node *cmds);

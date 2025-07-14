@@ -52,7 +52,6 @@ t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp)
 	
 	i = 0;
 	init_parse(&cmd, &args, &arg_i);
-
 	while (tokens[i])
 		condition_while_pipe(tokens, &i, &cmd, &args, &arg_i, &cmds, &last, envp);
 	add_cmd_node(&cmds, &last, cmd, args, arg_i);
