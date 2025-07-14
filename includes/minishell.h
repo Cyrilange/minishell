@@ -87,7 +87,7 @@ void process_token(t_token *token, char **args, int *arg_i, char **envp);
 int	execute_builtin(char **args, char ***envp);
 void	redirect_outfile(char *fil, bool append);
 void	redirect_infile(char *fil);
-void execute_command(char **command, char ***envp);
+int execute_command(char **command, char ***envp);
 
 
 

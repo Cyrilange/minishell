@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+extern int g_status;
+
 void	redirect_outfile(char *fil, bool append)
 {
 	int	outfile_fd;
@@ -32,23 +34,28 @@ bool is_absolute(char *command)
     return false;
 }
 
-void execute_command(char **command, char ***envp)
+int execute_command(char **command, char ***envp)
 {
         if (command && command[0])// Execute command
         {
             if (is_builtin(command[0]) == true) // if its a builtin
-                execute_builtin(command, envp);
+                g_status = execute_builtin(command, envp);
             else // if its not a builtin
 			{
                 if (!is_absolute(command[0])) // if program was not sent as an abs path
                     get_cmd_path(*envp, &command[0], command[0]); // convert program name to abs path for execve
 				if (access(command[0], X_OK) == -1) // if path cant be executed
-                    return (ft_error("Executable not found\n", false)); // throw error
+				{
+                    g_status = 127;
+                    return (ft_error("Executable not found\n", false), 1); // throw error
+				}
                 pid_t pid = fork(); // create a child proc
 				if (pid == 0) // child proc
                     execve(command[0], command, *envp);
 				else // parent proc
-                    waitpid(pid, NULL, 0);
+				{
+                    waitpid(pid, &g_status, 0);
+				}
 			}
         }
 }

@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+int g_status;
+
 t_prompt set_initial_variables(char **argv, char **envp)
 {
    t_prompt prompt;
