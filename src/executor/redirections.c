@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+# include <sys/stat.h>
 
 void	redirect_outfile(char *fil, bool append)
 {
@@ -22,6 +23,7 @@ void	redirect_infile(char *fil)
 
     infile_fd = open(fil, O_RDONLY); // append
     dup2(infile_fd, STDIN_FILENO); // redirect stdout to the target file
+    
 	close(infile_fd);
 }
 
