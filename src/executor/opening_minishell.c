@@ -1,5 +1,7 @@
 #include "../../includes/minishell.h"
 
+extern int g_status;
+
 int	execute_builtin(char **args, char ***envp)
 {
 	if (ft_strcmp(args[0], "cd") == 0)
@@ -37,7 +39,7 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
                 exit(1);
 			}
 			else // parent proc
-                waitpid(pid, NULL, 0);
+                waitpid(pid, &g_status, 0);
 
 		}
         else if (tmp->cmd->outfile) // Print outfile if present
@@ -51,7 +53,7 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
                 exit(1);
 			}
 			else // parent proc
-                waitpid(pid, NULL, 0);
+                waitpid(pid, &g_status, 0);
 		}
         else
 			execute_command(tmp->cmd->args, envp);
