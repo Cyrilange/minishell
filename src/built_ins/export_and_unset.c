@@ -43,13 +43,13 @@ int is_in_envp(char *arg, char **envp)
 }
 
 
-char *get_env_var_value(char *var, char **envp, int n)
+char *get_env_var_value(char *var, char **envp)
 {
 
 	int var_i;
 	int begin_str;
 	char *value;
-	var_i = is_in_envp(var, envp); // search var in evp and return its index
+	var_i = is_in_envp(var, envp); // search var in envp and return its index
 	if(var_i == -1)
 		return NULL;
 	begin_str = ft_strlen(var) + 1; // set index to cut out the "VARNAME="

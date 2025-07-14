@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static void init_parse(t_cmd **cmd, char ***args, int *arg_i)
 {
@@ -31,16 +31,16 @@ static void add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char 
 }
 
 
-static void process_token(t_token *token, char **args, int *arg_i)
+static void process_token(t_token *token, char **args, int *arg_i, char **envp)
 {
     if (token->quote_type != SINGLE_QUOTE)
-        args[(*arg_i)++] = expand_variables(token->value, token->quote_type);
+        args[(*arg_i)++] = expand_variables(token->value, token->quote_type, envp);
     else
         args[(*arg_i)++] = ft_strdup(token->value);
 }
 
 
-t_cmd_node *parse_pipeline_tokens(t_token **tokens)
+t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp)
 {
     t_cmd_node *cmds = NULL;
     t_cmd_node *last = NULL;
@@ -90,7 +90,7 @@ t_cmd_node *parse_pipeline_tokens(t_token **tokens)
 			}
 		}
         else
-            process_token(tokens[i], args, &arg_i);
+            process_token(tokens[i], args, &arg_i, envp);
         i++;
     }
     add_cmd_node(&cmds, &last, cmd, args, arg_i);

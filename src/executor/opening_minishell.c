@@ -3,7 +3,7 @@
 int	execute_builtin(char **args, char ***envp)
 {
 	if (ft_strcmp(args[0], "cd") == 0)
-		return builtin_cd(args[1]);
+		return builtin_cd(args[1]); // working
 	else if (ft_strcmp(args[0], "echo") == 0)
         return builtin_echo(args); // working
 	else if (ft_strcmp(args[0], "pwd") == 0)
@@ -11,9 +11,9 @@ int	execute_builtin(char **args, char ***envp)
 	else if (ft_strcmp(args[0], "exit") == 0)
         return builtin_exit(args); // working
 	else if (ft_strcmp(args[0], "export") == 0)
-        return builtin_export(args, envp); // not working
+        return builtin_export(args, envp); // working
 	else if (ft_strcmp(args[0], "unset") == 0)
-        return builtin_unset(args, envp); // not working
+        return builtin_unset(args, envp); // working
 	else if (ft_strcmp(args[0], "env") == 0)
         return builtin_env(*envp); // working
 	return 0;
@@ -27,23 +27,34 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
-       // j = 0;
-       // while (tmp->cmd->args && tmp->cmd->args[j])// Print all arguments
-       // {
-        //    printf("Arg[%d]: %s\n", j, tmp->cmd->args[j]);
-        //    j++;
-       // }     
-        if (tmp->cmd->infile)// Print infile if present
-            printf("Infile: %s\n", tmp->cmd->infile);     
-        if (tmp->cmd->outfile)// Print outfile if present
-            printf("Outfile: %s\n", tmp->cmd->outfile);
-        if (tmp->cmd->args && tmp->cmd->args[0])// Execute command
-        {
-            if (is_builtin(tmp->cmd->args[0]))
-                execute_builtin(tmp->cmd->args, envp);
-            else
-                fprintf(stderr, "Commande non builtin : %s\n", tmp->cmd->args[0]);
-        }     
+        if (tmp->cmd->infile) // Print infile if present
+		{
+            pid_t pid = fork(); // fork
+			if (pid == 0) // child proc
+			{
+                redirect_infile(tmp->cmd->infile);
+                execute_command(tmp->cmd->args, envp);
+                exit(1);
+			}
+			else // parent proc
+                waitpid(pid, NULL, 0);
+
+		}
+        else if (tmp->cmd->outfile) // Print outfile if present
+		{
+            pid_t pid = fork(); // fork
+			if (pid == 0) // child proc
+			{
+                printf("Outfile: %s\n", tmp->cmd->outfile);
+                redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
+                execute_command(tmp->cmd->args, envp);
+                exit(1);
+			}
+			else // parent proc
+                waitpid(pid, NULL, 0);
+		}
+        else
+			execute_command(tmp->cmd->args, envp);
         tmp = tmp->next;// Move to next command in pipeline
     }
 }
@@ -60,7 +71,7 @@ void command(char *input, char ***envp)
     tokens = tokenize_input(input); // Tokenize the input string
     if (!tokens)
         return;
-    cmds = parse_pipeline_tokens(tokens);
+    cmds = parse_pipeline_tokens(tokens, *envp);
     execute_cmds(cmds, envp);// execute commands
     free_cmd_list(cmds);//clean cmds
     i = 0;

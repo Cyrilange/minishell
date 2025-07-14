@@ -4,19 +4,19 @@ bool is_builtin(char *command)
 {
 	if (command == NULL)
 		return false;
-	if (ft_strcmp(command, "cd"))
+	else if (ft_strcmp(command, "cd") == 0)
 		return true;
-	if (ft_strcmp(command, "echo"))
+	else if (ft_strcmp(command, "echo") == 0)
 		return true;
-	if (ft_strcmp(command, "env"))
+	else if (ft_strcmp(command, "env") == 0)
 		return true;
-	if (ft_strcmp(command, "exit"))
+	else if (ft_strcmp(command, "exit") == 0)
 		return true;
-	if (ft_strcmp(command, "export"))
+	else if (ft_strcmp(command, "export") == 0)
 		return true;
-	if (ft_strcmp(command, "pwd"))
+	else if (ft_strcmp(command, "pwd") == 0)
 		return true;
-	if (ft_strcmp(command, "unset"))
+	else if (ft_strcmp(command, "unset") == 0)
 		return true;
 	return false;
 }
