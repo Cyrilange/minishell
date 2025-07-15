@@ -27,13 +27,14 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 {
     t_cmd_node	*tmp;
     int			j;
+	pid_t pid;
 
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
         if (tmp->cmd->heredoc || tmp->cmd->infile || tmp->cmd->outfile) // only fork if there is a redirection
         {
-            pid_t pid = fork();
+            pid = fork();
             if (pid == 0) // child proc
             {
 				if (tmp->cmd->heredoc)
@@ -71,7 +72,10 @@ void command(char *input, char ***envp)
 	if (!tokens)
 		return;
 	cmds = parse_pipeline_tokens(tokens, *envp);
-	execute_cmds(cmds, envp);// execute commands
+	if (cmds && cmds->next) // si pipeline détecté
+		execute_pipeline(cmds, envp); // -> special for pipes
+	else
+		execute_cmds(cmds, envp); // normal exec
 	free_cmd_list(cmds);//clean cmds
 	i = 0;
 	while (tokens[i]) // Free each token

@@ -23,7 +23,7 @@ char *read_multiline_command(void)
 
     while (!quotes_are_closed(full_line))
     {
-        line = readline("> "); // so if you fogrt the quote you have a new line 
+        line = readline(">"); // so if you fogrt the quote you have a new line 
         char *tmp = ft_strjoin(full_line, "\n");  // keep the line
         free(full_line);
         full_line = ft_strjoin(tmp, line);

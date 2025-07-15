@@ -67,5 +67,22 @@ void handle_heredoc_if_needed(t_cmd *cmd)
     {
         redirect_infile(cmd->infile);
     }
+    if (cmd->outfile)
+    {
+        int flags = O_CREAT | O_WRONLY;
+        if (cmd->append)
+            flags |= O_APPEND;
+        else
+            flags |= O_TRUNC;
+
+        int fd = open(cmd->outfile, flags, 0644);
+        if (fd < 0)
+        {
+            write(0,"open outfile", 13);
+            exit(1);
+        }
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+    }
 }
 

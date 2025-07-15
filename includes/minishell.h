@@ -91,6 +91,7 @@ void condition_while_pipe(t_token **tokens, int *i, t_cmd **cmd, char ***args,
 void add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char **args, int arg_i);
 void init_parse(t_cmd **cmd, char ***args, int *arg_i);
 void process_token(t_token *token, char **args, int *arg_i, char **envp);
+void execute_pipeline(t_cmd_node *cmds, char ***envp);
 
 int	execute_builtin(char **args, char ***envp);
 void	redirect_outfile(char *fil, bool append);
