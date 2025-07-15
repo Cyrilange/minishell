@@ -24,32 +24,35 @@ int	execute_builtin(char **args, char ***envp)
 
 static void execute_cmds(t_cmd_node *cmds, char ***envp)
 {
-    t_cmd_node *tmp = cmds;
+    t_cmd_node	*tmp;
+    int			j;
 
+	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
-        pid_t pid = fork();
-        if (pid == -1)
+        if (tmp->cmd->heredoc || tmp->cmd->infile || tmp->cmd->outfile) // only fork if there is a redirection
         {
-            perror("fork failed");
-            exit(EXIT_FAILURE);
-        }
-        if (pid == 0)
-        {
-            if (tmp->cmd->heredoc)
-                handle_heredoc_if_needed(tmp->cmd);
-            else if (tmp->cmd->infile)
-                redirect_infile(tmp->cmd->infile);
-            if (tmp->cmd->outfile)
-                redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
-            execute_command(tmp->cmd->args, envp);
-            exit(EXIT_FAILURE);
+            pid_t pid = fork();
+            if (pid == 0) // child proc
+            {
+				if (tmp->cmd->heredoc)
+                    handle_heredoc_if_needed(tmp->cmd);
+                // Redirections
+                if (tmp->cmd->infile)
+                    redirect_infile(tmp->cmd->infile);
+                if (tmp->cmd->outfile)
+                    redirect_outfile(tmp->cmd->outfile, tmp->cmd->append);
+
+                // Exécute la commande
+                execute_command(tmp->cmd->args, envp);
+                exit(1);
+            }
+            else // parent proc
+                waitpid(pid, &g_status, 0); // wait for child to finish and set g_status
         }
         else
-        {
-            waitpid(pid, &g_status, 0);
-        }
-        tmp = tmp->next;
+            execute_command(tmp->cmd->args, envp);
+    tmp = tmp->next;
     }
 }
 
