@@ -59,10 +59,7 @@ void handle_heredoc_if_needed(t_cmd *cmd)
     {
         char *heredoc_file = handle_heredoc(cmd->heredoc_delimiter);
         if (!heredoc_file)
-        {
-            perror("handle_heredoc failed");
             exit(1);
-        }
         redirect_infile(heredoc_file);
         free(heredoc_file);
     }

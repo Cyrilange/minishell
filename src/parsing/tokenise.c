@@ -60,12 +60,12 @@ static t_token	*extract_token(t_prompt *data)// Determines the type of token bas
 
 	c = data->input[data->i];// Get the current character from the input string.
 	// Case 1: Redirection symbols (exemple., ">", ">>", "<", "<<")
-    // If the current character is '>' or '<', we may be starting a redirection operator.
-    // This can be either a single or double redirection.
+	// If the current character is '>' or '<', we may be starting a redirection operator.
+	// This can be either a single or double redirection.
 	if (c == '>' || c == '<')
 		return parse_redirection(data);// Handle and return the redirection token
 	// Case 2: Pipe character '|'
-    // If we encounter a pipe, it represents a command separator in a pipeline.
+	// If we encounter a pipe, it represents a command separator in a pipeline.
 	if (c == '|')
 	{
 		data->i++; // Skip the pipe character
@@ -73,11 +73,11 @@ static t_token	*extract_token(t_prompt *data)// Determines the type of token bas
 
 	}
 	// Case 3: Quoted strings
-    // If the character is a quote (single or double), we parse it accordingly.
+	// If the character is a quote (single or double), we parse it accordingly.
 	if (c == '\'' || c == '"')
 		return parse_quote(data);
 	// Case 4: Regular word 
-    // If it's none of the above, assume it's a regular word 
+	// If it's none of the above, assume it's a regular word 
 	return parse_word(data);
 }
 

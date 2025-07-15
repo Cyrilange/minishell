@@ -27,6 +27,7 @@ SRC_FILES = \
 	src/parsing/helper_functions.c \
 	src/parsing/pipe_helper.c \
 	src/parsing/variables.c \
+	src/parsing/helper_parse.c \
 	src/parsing/pipes.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \

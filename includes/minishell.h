@@ -76,6 +76,7 @@ t_token *create_token(char *value, t_quotes quote_type);
 char *expand_variables(const char *str, t_quotes quote_type, char **envp);
 int	is_special(char c);
 int	is_quote(char c);
+char *read_multiline_command(void);
 
 //heredoc
 char *handle_heredoc(char *delimiter);

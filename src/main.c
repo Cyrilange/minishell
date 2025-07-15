@@ -33,13 +33,16 @@ int main(int argc, char **argv, char **envp)
 	char **matrix;
 	while (1)
 	{
-		char *input = get_input();
-		if (!input)
+		char *input = get_input(&prompt);
+		if (!input || !*input) // If input is empty or NULL, continue to the next iteration
+		{
+			free(input);
 			continue;
+		}
 		command(input, &prompt.envp);
 		/* is_in_envp("hi", prompt.envp); */
 		/* matrix =  matrix_str_add(prompt.envp, "hello"); */
-		free(input);
+		free(input); 
 	}
 	return 0;
 }

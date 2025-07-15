@@ -109,23 +109,25 @@ void free_cmd_list(t_cmd_node *cmds)
 }
 
 
-char	*get_input()
+char *get_input(t_prompt *prompt)
 {
-	t_prompt input;
-	char *cwd;
-	
-	cwd = getenv("PWD");
-	if (cwd)
-		printf("\033[0;32mminishell> \033[0;34m%s\033[0m $ ", cwd);
-	else
-		printf("\033[0;32mminishell> \033[0m$ ");
-	input.input = readline(NULL);
-	if (!input.input)
-	{
-		printf("exit\n");
-		exit(0);
-	}
-	if (input.input && *(input.input))
-		add_history(input.input);
-	return input.input;
+    char *cwd;
+
+    cwd = getenv("PWD");
+    if (cwd)
+        printf("\033[0;32mminishell> \033[0;34m%s\033[0m $ ", cwd);
+    else
+        printf("\033[0;32mminishell> \033[0m$ ");
+
+    prompt->input = read_multiline_command();
+    if (!prompt->input)
+    {
+        printf("exit\n");
+        exit(0);
+    }
+    if (*(prompt->input))
+        add_history(prompt->input);
+
+    return prompt->input;
 }
+
