@@ -22,6 +22,7 @@ SRC_FILES = \
 	src/built_ins/export_and_unset.c \
 	src/miniutils/matrix_str.c \
 	src/miniutils/errors.c \
+	src/parsing/condition_while_pipe.c \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
 	src/parsing/helper_functions.c \

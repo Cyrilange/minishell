@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void	handle_redirection(t_token **tokens, int *i, t_cmd *cmd)
+void	handle_redirection(t_token **tokens, int *i, t_cmd *cmd)
 {
 	if (!ft_strcmp(tokens[*i]->value, ">"))
 	{
@@ -39,19 +39,14 @@ static void	handle_redirection(t_token **tokens, int *i, t_cmd *cmd)
 }
 
 
-static void	handle_token(t_token *token, char **args, int *arg_i, char **envp)
+void	handle_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	process_token(token, args, arg_i, envp);
 }
 
 
-static void	handle_pipe(t_cmd_node **cmds, t_cmd_node **last, t_cmd **cmd, char ***args, int *arg_i)
-{
-	add_cmd_node(cmds, last, *cmd, *args, *arg_i);
-	init_parse(cmd, args, arg_i);
-}
 
-
+/*
 void	condition_while_pipe(t_token **tokens, int *i, t_cmd **cmd, char ***args,
 	int *arg_i, t_cmd_node **cmds, t_cmd_node **last, char **envp)
 {
@@ -82,7 +77,7 @@ void	condition_while_pipe(t_token **tokens, int *i, t_cmd **cmd, char ***args,
 		(*i)++;
 	}
 }
-
+*/
 void	execute_pipeline(t_cmd_node *cmds, char ***envp)
 {
 	int		pipe_fd[2];
