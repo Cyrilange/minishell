@@ -26,7 +26,7 @@ SRC_FILES = \
 	src/parsing/handle_redirection.c \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
-	src/parsing/helper_functions.c \
+	src/parsing/handle_heredoc.c \
 	src/parsing/helper_small_function.c \
 	src/parsing/pipe_helper.c \
 	src/parsing/variables.c \
