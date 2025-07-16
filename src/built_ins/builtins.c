@@ -21,16 +21,3 @@ bool is_builtin(char *command)
 	return false;
 }
 
-/* int filter_nonforkable_builtins(t_prompt *prompt, t_cmd_node *cmd) */
-/* { */
-/* 	char **command; */
-/* 	while (cmd != NULL) */
-/* 	{ */
-/* 		command = ((t_cmd *)cmd->cmd)->args; */
-/* 		cmd = cmd->next; */
-/* 	} */
-/* 	if (cmd == NULL) */
-/* 	{ */
-/* 		return 1; */
-/* 	} */
-/* } */

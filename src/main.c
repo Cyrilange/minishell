@@ -47,7 +47,9 @@ int	main(int argc, char **argv, char **envp)
 		command(input, &prompt.envp);
 		/* is_in_envp("hi", prompt.envp); */
 		/* matrix =  matrix_str_add(prompt.envp, "hello"); */
+		
 		free(input); 
+	
 	}
 	return 0;
 }

@@ -23,6 +23,7 @@ SRC_FILES = \
 	src/miniutils/matrix_str.c \
 	src/miniutils/errors.c \
 	src/parsing/condition_while_pipe.c \
+	src/parsing/handle_redirection.c \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
 	src/parsing/helper_functions.c \

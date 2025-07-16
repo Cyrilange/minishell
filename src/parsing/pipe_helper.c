@@ -1,46 +1,22 @@
 #include "../../includes/minishell.h"
 
-void	handle_redirection(t_token **tokens, int *i, t_cmd *cmd)
-{
-	if (!ft_strcmp(tokens[*i]->value, ">"))
-	{
-		(*i)++; //go to fitst token 
-		if (tokens[*i])
-			cmd->outfile = ft_strdup(tokens[*i]->value);
-		(*i)++; //go to the second token
-	}
-	else if (!ft_strcmp(tokens[*i]->value, ">>"))
-	{
-		(*i)++;
-		if (tokens[*i])
-		{
-			cmd->outfile = ft_strdup(tokens[*i]->value);
-			cmd->append = 1;
-		}
-		(*i)++;
-	}
-	else if (!ft_strcmp(tokens[*i]->value, "<"))
-	{
-		(*i)++;
-		if (tokens[*i])
-			cmd->infile = ft_strdup(tokens[*i]->value);
-		(*i)++;
-	}
-	else if (!ft_strcmp(tokens[*i]->value, "<<"))
-	{
-		(*i)++;
-		if (tokens[*i])
-		{
-			cmd->infile = ft_strdup(tokens[*i]->value);
-			cmd->heredoc = 1;
-		}
-		(*i)++;
-	}
-}
-
 void	handle_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	process_token(token, args, arg_i, envp);
+}
+static void	child_process(t_cmd_node *cmd, int pipe_fd[2], int in_fd, char ***envp)
+{
+	if (cmd->next)
+		dup2(pipe_fd[1], STDOUT_FILENO);
+	if (in_fd != 0)
+		dup2(in_fd, STDIN_FILENO);
+	if (cmd->cmd->infile)
+		redirect_infile(cmd->cmd->infile);
+	if (cmd->cmd->outfile)
+		redirect_outfile(cmd->cmd->outfile, cmd->cmd->append);
+	close(pipe_fd[0]);
+	execute_command(cmd->cmd->args, envp);
+	exit(1);
 }
 
 void	execute_pipeline(t_cmd_node *cmds, char ***envp)
@@ -55,19 +31,7 @@ void	execute_pipeline(t_cmd_node *cmds, char ***envp)
 			return (perror("pipe"));
 		pid = fork();
 		if (pid == 0)
-		{
-			if (cmds->next)
-				dup2(pipe_fd[1], STDOUT_FILENO);
-			if (in_fd != 0)
-				dup2(in_fd, STDIN_FILENO);
-			if (cmds->cmd->infile)
-				redirect_infile(cmds->cmd->infile);
-			if (cmds->cmd->outfile)
-				redirect_outfile(cmds->cmd->outfile, cmds->cmd->append);
-			close(pipe_fd[0]);
-			execute_command(cmds->cmd->args, envp);
-			exit(1);
-		}
+			child_process(cmds, pipe_fd, in_fd, envp);
 		close(pipe_fd[1]);
 		if (in_fd != 0)
 			close(in_fd);
