@@ -25,6 +25,7 @@ SRC_FILES = \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
 	src/parsing/helper_functions.c \
+	src/parsing/helper_small_function.c \
 	src/parsing/pipe_helper.c \
 	src/parsing/variables.c \
 	src/parsing/helper_parse.c \

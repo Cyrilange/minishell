@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static t_token *parse_redirection(t_prompt *data)
+static t_token	*parse_redirection(t_prompt *data)
 {
 	int start;
 	
@@ -36,7 +36,7 @@ static t_token *parse_quote(t_prompt *data)
 }
 
 // Parses normal words (commands, arguments, etc.)
-static t_token *parse_word(t_prompt *data)
+static t_token	*parse_word(t_prompt *data)
 {
 	int start;
 	int	len;
@@ -83,7 +83,7 @@ static t_token	*extract_token(t_prompt *data)// Determines the type of token bas
 
 
 
-t_token **tokenize_input(char *input) // Tokenizes the input string into an array of t_token pointers
+t_token	**tokenize_input(char *input) // Tokenizes the input string into an array of t_token pointers
 {
 	t_prompt data;        // Temporary struct to track parsing state
 	t_token **tokens;     // Array of token pointers to return

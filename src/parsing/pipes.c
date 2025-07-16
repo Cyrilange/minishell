@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-void init_parse(t_cmd **cmd, char ***args, int *arg_i)
+void	init_parse(t_cmd **cmd, char ***args, int *arg_i)
 {
 	*cmd = calloc(1, sizeof(t_cmd)); // Initialize command structure
 	(*cmd)->infile = NULL;
@@ -13,7 +13,7 @@ void init_parse(t_cmd **cmd, char ***args, int *arg_i)
 	*arg_i = 0;
 }
 
-void add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char **args, int arg_i)
+void	add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char **args, int arg_i)
 {
 	args[arg_i] = NULL;
 	cmd->args = args;
@@ -31,7 +31,7 @@ void add_cmd_node(t_cmd_node **cmds, t_cmd_node **last, t_cmd *cmd, char **args,
 }
 
 
-void process_token(t_token *token, char **args, int *arg_i, char **envp)
+void	process_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	if (token->quote_type != SINGLE_QUOTE)
 		args[(*arg_i)++] = expand_variables(token->value, token->quote_type, envp);
@@ -41,7 +41,7 @@ void process_token(t_token *token, char **args, int *arg_i, char **envp)
 
 
 
-t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp)
+t_cmd_node	*parse_pipeline_tokens(t_token **tokens, char **envp)
 {
 	t_cmd_node *cmds = NULL;
 	t_cmd_node *last = NULL;

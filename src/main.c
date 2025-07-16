@@ -3,16 +3,17 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int g_status;
+int	g_status;
 
-t_prompt set_initial_variables(char **argv, char **envp)
+t_prompt	set_initial_variables(char **argv, char **envp)
 {
-   t_prompt prompt;
-   prompt.input = NULL;
-   prompt.envp = matrix_str_dup(envp, -1, NULL);
+	t_prompt prompt;
+
+	prompt.input = NULL;
+	prompt.envp = matrix_str_dup(envp, -1, NULL);
    //TODO get pid for the minishell process
    //TODO initialize essential variables
-   return prompt;
+	return prompt;
 }
 
 t_prompt initialize_variables(t_prompt prompt, char *str, char **argv)
@@ -20,17 +21,21 @@ t_prompt initialize_variables(t_prompt prompt, char *str, char **argv)
 
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	(void) argc; // Not in use right now
-	t_prompt prompt;
-	prompt = set_initial_variables(argv, envp);
+	t_prompt	prompt;
+	
 	/* char **dup =  matrix_str_dup(prompt.envp); */
 	/* dup = matrix_str_add(dup, "hello"); */
 	/* matrix_str_print(dup); */
-	int i = 0;
-	int j = 1;
-	char **matrix;
+	int			i;
+	int			j;
+	char		**matrix;
+
+	prompt = set_initial_variables(argv, envp);
+	i = 0;
+	j = 1;
 	while (1)
 	{
 		char *input = get_input(&prompt);
