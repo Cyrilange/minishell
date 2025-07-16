@@ -6,7 +6,6 @@ static void	handle_pipe(t_pipe_ctx *ctx)
 	init_parse(&ctx->pctx);
 }
 
-
 static int	is_pipe_token(t_token *token)
 {
 	return (!ft_strcmp(token->value, "|") && token->quote_type == NO_QUOTE);
@@ -30,7 +29,8 @@ void	condition_while_pipe(t_pipe_ctx *ctx)
 		ctx->pctx.cmd->heredoc = 1;
 		ctx->i++;
 		if (ctx->tokens[ctx->i])
-			ctx->pctx.cmd->heredoc_delimiter = ft_strdup(ctx->tokens[ctx->i++]->value);
+			ctx->pctx.cmd->heredoc_delimiter = ft_strdup
+				(ctx->tokens[ctx->i++]->value);
 	}
 	else if (is_pipe_token(token))
 	{
