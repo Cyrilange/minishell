@@ -30,6 +30,7 @@ typedef struct s_cmd
 	int		heredoc; // heredoc flag
 	char	*heredoc_delimiter; // delimiter for heredoc
 	int		append; // append flag
+	int invalid_syntax;
 }			t_cmd;
 
 typedef struct s_cmd_node
@@ -95,6 +96,9 @@ char		*expand_variables(const char *str,
 int			is_special(char c);
 int			is_quote(char c);
 char		*read_multiline_command(void);
+//help variables
+char	*append_str(char *base, const char *add);
+char	*is_var_name(const char *str, int *len);
 //heredoc
 char		*handle_heredoc(char *delimiter);
 void		handle_heredoc_if_needed(t_cmd *cmd);

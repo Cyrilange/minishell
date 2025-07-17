@@ -57,7 +57,9 @@ int execute_command(char **command, char ***envp)
 				else // parent proc
 				{
                     waitpid(pid, &g_status, 0);
-                    g_status = g_status / 256; // idk why waitpid multiplies the errcode by 256
+                    //g_status = g_status / 256; // idk why waitpid multiplies the errcode by 256
+					if (WIFEXITED(g_status)) //cyril add
+						g_status = WEXITSTATUS(g_status); //cyril add
 				}
 			}
         }

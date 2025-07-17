@@ -32,6 +32,11 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 	tmp = cmds; // Start with the first command in the pipeline
     while (tmp)
     {
+		if (tmp->cmd->invalid_syntax) //cyril add as add a flag 
+		{
+			tmp = tmp->next;
+			continue;
+		}
         if (tmp->cmd->heredoc || tmp->cmd->infile || tmp->cmd->outfile) // only fork if there is a redirection
         {
             pid = fork();

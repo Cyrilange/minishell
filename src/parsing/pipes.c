@@ -13,25 +13,31 @@ void	init_parse(t_parse_ctx *pctx)
 
 void	add_cmd_node(t_parse_ctx *pctx)
 {
+	t_cmd_node	*node;
+
 	pctx->args[pctx->arg_i] = NULL;
 	pctx->cmd->args = pctx->args;
-
-	t_cmd_node *node = malloc(sizeof(t_cmd_node));
+	node = malloc(sizeof(t_cmd_node));
+	if (!node)
+	{
+		free(pctx->cmd->args);
+		free(pctx->cmd);
+		return ;
+	}
 	node->cmd = pctx->cmd;
 	node->next = NULL;
-
 	if (!*pctx->cmds)
 		*pctx->cmds = node;
 	else
 		(*pctx->last)->next = node;
-
 	*pctx->last = node;
 }
 
 void	process_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	if (token->quote_type != SINGLE_QUOTE)
-		args[(*arg_i)++] = expand_variables(token->value, token->quote_type, envp);
+		args[(*arg_i)++] = expand_variables(token->value,
+				token->quote_type, envp);
 	else
 		args[(*arg_i)++] = ft_strdup(token->value);
 }
@@ -39,19 +45,19 @@ void	process_token(t_token *token, char **args, int *arg_i, char **envp)
 t_cmd_node	*parse_pipeline_tokens(t_token **tokens, char **envp)
 {
 	t_pipe_ctx	ctx;
-	t_cmd_node	*cmds = NULL;
-	t_cmd_node	*last = NULL;
+	t_cmd_node	*cmds;
+	t_cmd_node	*last;
 
+	cmds = NULL;
+	last = NULL;
 	ctx.tokens = tokens;
 	ctx.i = 0;
 	ctx.pctx.cmds = &cmds;
 	ctx.pctx.last = &last;
 	init_parse(&ctx.pctx);
 	ctx.envp = envp;
-
 	while (ctx.tokens[ctx.i])
 		condition_while_pipe(&ctx);
-
 	add_cmd_node(&ctx.pctx);
 	return (cmds);
 }

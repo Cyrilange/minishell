@@ -30,6 +30,7 @@ SRC_FILES = \
 	src/parsing/helper_small_function.c \
 	src/parsing/pipe_helper.c \
 	src/parsing/variables.c \
+	src/parsing/variables_helper.c \
 	src/parsing/helper_parse.c \
 	src/parsing/pipes.c \
 	src/executor/redirections.c \

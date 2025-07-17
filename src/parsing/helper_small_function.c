@@ -2,7 +2,7 @@
 
 int	is_var_char(char c)
 {
-	return (ft_isalnum(c) || c == '_');// Check if character is alphanumeric or underscore
+	return (ft_isalnum(c) || c == '_');
 }
 
 int	is_quote(char c)
