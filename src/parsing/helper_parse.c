@@ -25,8 +25,10 @@ char	*read_multiline_command(void)
 	char	*line;
 	char	*full_line;
 	char	*tmp;
-
+ 
 	line = readline("minishell> ");
+	if (!line)
+		return (NULL);
 	full_line = ft_strdup(line);
 	free(line);
 	while (!quotes_are_closed(full_line))
