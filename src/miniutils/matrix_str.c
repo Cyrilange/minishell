@@ -1,15 +1,16 @@
 #include "miniutils.h"
 #include <stdio.h>
 
-int matrix_len(char **matrix)
+int	matrix_len(char **matrix)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	if (matrix == NULL)
 		return 0;
-	while(matrix[i] != NULL)
+	while (matrix[i] != NULL)
 		i++;
-	return i;
+	return (i);
 }
 
 void	matrix_free(char ***matrix)
@@ -29,19 +30,19 @@ void	matrix_free(char ***matrix)
 	}
 }
 
-char **matrix_str_dup(char **matrix, int replaceline, char *newstr)
+char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
 {
-	char **newmatrix;
-	int len_matrix;
-	int i;
-	int j;
+	char	**newmatrix;
+	int		len_matrix;
+	int		i;
+	int		j;
 
 	j = 0;
 	i = -1;
 	len_matrix = matrix_len(matrix);
-	newmatrix = malloc(sizeof(*newmatrix) * (len_matrix  + 1));
+	newmatrix = malloc(sizeof(*newmatrix) * (len_matrix + 1));
 	if (newmatrix == NULL)
-		return NULL;
+		return (NULL);
 	while (matrix[++i] != NULL)
 	{
 		if ( i == replaceline && newstr == NULL)
@@ -88,9 +89,9 @@ char **matrix_str_add(char **matrix, char *newstr)
 
 }
 
-void matrix_str_print(char **matrix)
+void	matrix_str_print(char **matrix)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (matrix == NULL)

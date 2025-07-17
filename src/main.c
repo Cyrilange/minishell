@@ -1,7 +1,5 @@
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
-#include <stdio.h>
-#include <unistd.h>
 
 int	g_status;
 
@@ -16,19 +14,11 @@ t_prompt	set_initial_variables(char **argv, char **envp)
 	return prompt;
 }
 
-t_prompt initialize_variables(t_prompt prompt, char *str, char **argv)
-{
-
-}
-
 int	main(int argc, char **argv, char **envp)
 {
-	(void) argc; // Not in use right now
+	(void) argc;
 	t_prompt	prompt;
-	
-	/* char **dup =  matrix_str_dup(prompt.envp); */
-	/* dup = matrix_str_add(dup, "hello"); */
-	/* matrix_str_print(dup); */
+
 	int			i;
 	int			j;
 	char		**matrix;
@@ -39,17 +29,13 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		char *input = get_input(&prompt);
-		if (!input || !*input) // If input is empty or NULL, continue to the next iteration
+		if (!input || !*input)
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		command(input, &prompt.envp);
-		/* is_in_envp("hi", prompt.envp); */
-		/* matrix =  matrix_str_add(prompt.envp, "hello"); */
-		
-		free(input); 
-	
+		free(input);	
 	}
 	return 0;
 }

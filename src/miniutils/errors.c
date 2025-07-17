@@ -1,4 +1,4 @@
-#include  "miniutils.h"
+#include "miniutils.h"
 
 void	ft_error(char *str, bool exit_program)
 {

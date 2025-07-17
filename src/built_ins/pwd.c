@@ -17,10 +17,11 @@ void update_pwd(void)
 int builtin_pwd(void)
 {
     char cwd[1024];
+    
     if (getcwd(cwd, sizeof(cwd)))
     {
         printf("%s\n", cwd);
-        return 0;
+        return (0);
     }
-    return 1;
+    return (1);
 }
