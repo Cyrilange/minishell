@@ -4,7 +4,9 @@ void	handle_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	process_token(token, args, arg_i, envp);
 }
-static void	child_process(t_cmd_node *cmd, int pipe_fd[2], int in_fd, char ***envp)
+
+static void	child_process(t_cmd_node *cmd, int pipe_fd[2],
+		int in_fd, char ***envp)
 {
 	if (cmd->next)
 		dup2(pipe_fd[1], STDOUT_FILENO);
@@ -22,9 +24,10 @@ static void	child_process(t_cmd_node *cmd, int pipe_fd[2], int in_fd, char ***en
 void	execute_pipeline(t_cmd_node *cmds, char ***envp)
 {
 	int		pipe_fd[2];
-	int		in_fd = 0;
+	int		in_fd;
 	pid_t	pid;
 
+	in_fd = 0;
 	while (cmds)
 	{
 		if (cmds->next && pipe(pipe_fd) < 0)
@@ -41,4 +44,3 @@ void	execute_pipeline(t_cmd_node *cmds, char ***envp)
 	while (wait(NULL) > 0)
 		;
 }
-
