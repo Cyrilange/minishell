@@ -35,6 +35,7 @@ SRC_FILES = \
 	src/parsing/pipes.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
+	src/executor/get_input_and_free.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

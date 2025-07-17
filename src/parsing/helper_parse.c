@@ -40,3 +40,16 @@ char	*read_multiline_command(void)
 	}
 	return (full_line);
 }
+
+void	free_double_ptr(void **ptr)
+{
+	int	i;
+
+	i = 0;
+	while (ptr[i] != NULL)
+	{
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+}

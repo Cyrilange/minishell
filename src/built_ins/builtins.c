@@ -21,3 +21,21 @@ bool is_builtin(char *command)
 	return false;
 }
 
+int	execute_builtin(char **args, char ***envp)
+{
+	if (ft_strcmp(args[0], "cd") == 0)
+		return (builtin_cd(args[1]));
+	else if (ft_strcmp(args[0], "echo") == 0)
+		return (builtin_echo(args));
+	else if (ft_strcmp(args[0], "pwd") == 0)
+		return (builtin_pwd());
+	else if (ft_strcmp(args[0], "exit") == 0)
+		return (builtin_exit(args));
+	else if (ft_strcmp(args[0], "export") == 0)
+		return (builtin_export(args, envp));
+	else if (ft_strcmp(args[0], "unset") == 0)
+		return (builtin_unset(args, envp));
+	else if (ft_strcmp(args[0], "env") == 0)
+		return (builtin_env(*envp));
+	return (0);
+}
