@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-bool is_builtin(char *command)
+bool	is_builtin(char *command)
 {
 	if (command == NULL)
 		return (false);

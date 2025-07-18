@@ -25,7 +25,7 @@ char	*read_multiline_command(void)
 	char	*line;
 	char	*full_line;
 	char	*tmp;
- 
+
 	line = readline("minishell> ");
 	if (!line)
 		return (NULL);

@@ -7,7 +7,7 @@ int	matrix_len(char **matrix)
 
 	i = 0;
 	if (matrix == NULL)
-		return 0;
+		return (0);
 	while (matrix[i] != NULL)
 		i++;
 	return (i);
@@ -45,21 +45,21 @@ char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
 		return (NULL);
 	while (matrix[++i] != NULL)
 	{
-		if ( i == replaceline && newstr == NULL)
-			continue;
+		if (i == replaceline && newstr == NULL)
+			continue ;
 		if (i == replaceline)
 			newmatrix[j] = ft_strdup(newstr);
 		else
 			newmatrix[j] = ft_strdup(matrix[i]);
 		if (newmatrix == NULL)
-			return matrix_free(&newmatrix), NULL;
+			return (matrix_free(&newmatrix), NULL);
 		j++;
 	}
 	newmatrix[i] = NULL;
 	return (newmatrix);
 }
 
-char **matrix_str_add(char **matrix, char *newstr)
+char	**matrix_str_add(char **matrix, char *newstr)
 {
 	char	**newmatrix;
 	int		len;
@@ -86,7 +86,6 @@ char **matrix_str_add(char **matrix, char *newstr)
 	newmatrix[i] = ft_strdup(newstr);
 	matrix_free(&matrix);
 	return (newmatrix);
-
 }
 
 void	matrix_str_print(char **matrix)
@@ -96,10 +95,9 @@ void	matrix_str_print(char **matrix)
 	i = 0;
 	if (matrix == NULL)
 		return ;
-	while(matrix[i])
+	while (matrix[i])
 	{
 		printf("%s\n", matrix[i]);
 		i++;
 	}
-
 }

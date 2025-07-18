@@ -30,11 +30,11 @@ typedef struct s_cmd
 	int		heredoc; // heredoc flag
 	char	*heredoc_delimiter; // delimiter for heredoc
 	int		append; // append flag
-	int invalid_syntax;
+	int		invalid_syntax;
 }			t_cmd;
 
 typedef struct s_cmd_node
-{ //use for pipe to c reate a next cmd
+{
 	t_cmd				*cmd;
 	struct s_cmd_node	*next;
 }			t_cmd_node;
@@ -61,7 +61,6 @@ typedef struct s_parse_ctx
 	int			arg_i;
 }	t_parse_ctx;
 
-
 typedef struct s_pipe_ctx
 {
 	t_token		**tokens;
@@ -69,8 +68,6 @@ typedef struct s_pipe_ctx
 	t_parse_ctx	pctx; //cmd/cmds/args
 	char		**envp;
 }	t_pipe_ctx;
-
-
 
 bool		is_builtin(char *command);
 void		command(char *input, char ***envp);
@@ -97,8 +94,8 @@ int			is_special(char c);
 int			is_quote(char c);
 char		*read_multiline_command(void);
 //help variables
-char	*append_str(char *base, const char *add);
-char	*is_var_name(const char *str, int *len);
+char		*append_str(char *base, const char *add);
+char		*is_var_name(const char *str, int *len);
 //heredoc
 char		*handle_heredoc(char *delimiter);
 void		handle_heredoc_if_needed(t_cmd *cmd);
