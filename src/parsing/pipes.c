@@ -2,14 +2,30 @@
 
 void	init_parse(t_parse_ctx *pctx)
 {
+	int	i;
+
+	i = 0;
 	pctx->cmd = calloc(1, sizeof(t_cmd));
+	if (!pctx->cmd)
+		return;
+	pctx->cmd->args = NULL;
 	pctx->cmd->infile = NULL;
 	pctx->cmd->outfile = NULL;
 	pctx->cmd->append = 0;
 	pctx->cmd->heredoc = 0;
+	pctx->cmd->heredoc_delimiter = NULL;
+	pctx->cmd->invalid_syntax = 0;
 	pctx->args = malloc(sizeof(char *) * (MAX_ARGS + 1));
+	if (!pctx->args)
+		return;
+	while (i <= MAX_ARGS)
+	{
+		pctx->args[i] = NULL;
+		i++;
+	}
 	pctx->arg_i = 0;
 }
+
 
 void	add_cmd_node(t_parse_ctx *pctx)
 {

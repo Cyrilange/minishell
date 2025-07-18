@@ -5,7 +5,6 @@ void	free_cmd_list(t_cmd_node *cmds)
 	t_cmd_node	*tmp;
 	int			i;
 
-	i = -1;
 	while (cmds)
 	{
 		tmp = cmds->next;
@@ -13,12 +12,17 @@ void	free_cmd_list(t_cmd_node *cmds)
 		{
 			if (cmds->cmd->args)
 			{
-				while (cmds->cmd->args[++i])
+                i = 0;
+				while (cmds->cmd->args[i])
+                {
 					free(cmds->cmd->args[i]);
+                    i++;
+                }
 				free(cmds->cmd->args);
 			}
 			free(cmds->cmd->infile);
 			free(cmds->cmd->outfile);
+            free(cmds->cmd->heredoc_delimiter);
 			free(cmds->cmd);
 		}
 		free(cmds);
@@ -64,7 +68,6 @@ char	*get_input(t_prompt *prompt)
 	free(tmp);
 	input = read_multiline_command(prompt_str);
 	free(prompt_str);
-
 	if (!input)
 	{
 		printf("exit\n");
@@ -72,7 +75,6 @@ char	*get_input(t_prompt *prompt)
 	}
 	if (*input)
 		add_history(input);
-
 	prompt->input = input;
 	return input;
 }
