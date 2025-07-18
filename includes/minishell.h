@@ -14,6 +14,7 @@
 # include "./libft/libft.h"
 # include "../src/miniutils/miniutils.h"
 # include <fcntl.h>
+# include <signal.h>
 
 typedef enum e_quotes_type
 {
@@ -92,7 +93,7 @@ char		*expand_variables(const char *str,
 				t_quotes quote_type, char **envp);
 int			is_special(char c);
 int			is_quote(char c);
-char		*read_multiline_command(void);
+char		*read_multiline_command(char *prompt);
 //help variables
 char		*append_str(char *base, const char *add);
 char		*is_var_name(const char *str, int *len);
@@ -121,4 +122,6 @@ char		*get_path_variable(char **envp);
 char		*ret_path_if_exists(char **list_of_paths, char *program_name);
 int			get_cmd_path(char **envp, char **binpath, char *cmd);
 void		free_double_ptr(void **ptr);
+//signal
+void		setup_signal_handlers(void);
 #endif

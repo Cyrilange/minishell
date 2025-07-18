@@ -25,10 +25,12 @@ void	free_cmd_list(t_cmd_node *cmds)
 		cmds = tmp;
 	}
 }
-
+/*
 char	*get_input(t_prompt *prompt)
 {
 	char	*cwd;
+    char    *input;
+    char    *prompt_str;
 
 	cwd = getenv("PWD");
 	if (cwd)
@@ -44,4 +46,34 @@ char	*get_input(t_prompt *prompt)
 	if (*(prompt->input))
 		add_history(prompt->input);
 	return (prompt->input);
+} */
+
+char	*get_input(t_prompt *prompt)
+{
+	char	*cwd;
+	char	*prompt_str;
+	char	*input;
+
+	cwd = getenv("PWD");
+	if (cwd)
+		prompt_str = ft_strjoin("\033[0;32mminishell> \033[0;34m", cwd);
+	else
+		prompt_str = ft_strdup("\033[0;32mminishell> \033[0m");
+	char *tmp = prompt_str;
+	prompt_str = ft_strjoin(tmp, "\033[0m $ ");
+	free(tmp);
+	input = read_multiline_command(prompt_str);
+	free(prompt_str);
+
+	if (!input)
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	if (*input)
+		add_history(input);
+
+	prompt->input = input;
+	return input;
 }
+

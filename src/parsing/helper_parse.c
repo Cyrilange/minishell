@@ -20,13 +20,13 @@ static int	quotes_are_closed(const char *str)
 	return (single % 2 == 0 && dbl % 2 == 0);
 }
 
-char	*read_multiline_command(void)
+char	*read_multiline_command(char *prompt)
 {
 	char	*line;
 	char	*full_line;
 	char	*tmp;
 
-	line = readline("minishell> ");
+	line = readline(prompt);
 	if (!line)
 		return (NULL);
 	full_line = ft_strdup(line);
@@ -34,6 +34,11 @@ char	*read_multiline_command(void)
 	while (!quotes_are_closed(full_line))
 	{
 		line = readline(">");
+		if (!line)
+		{
+    		free(full_line);
+    		return (NULL);
+		}
 		tmp = ft_strjoin(full_line, "\n");
 		free(full_line);
 		full_line = ft_strjoin(tmp, line);
