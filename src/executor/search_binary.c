@@ -44,13 +44,13 @@ int	get_cmd_path(char **envp, char **binpath, char *cmd)
 
 	single_line_path = get_path_variable(envp);
 	if (single_line_path == NULL)
-		return (ft_error("Did not find any PATH\n", false), 1);
+		return (127);
 	list_of_paths = ft_split(single_line_path, ':');
 	if (list_of_paths == NULL)
-		return (ft_error("Memory allocation failure\n", false), 2);
+		return (127);
 	*binpath = ret_path_if_exists(list_of_paths, cmd);
 	free_double_ptr((void **)list_of_paths);
 	if (*binpath == NULL)
-		return (ft_error("Executable not found\n", false), 127);
+		return (127);
 	return (0);
 }

@@ -1,10 +1,12 @@
 #include "../../includes/minishell.h"
 
-int builtin_echo(char **args)
+int	builtin_echo(char **args)
 {
-	int newline = 1;
-	int i = 1;
+	int	newline;
+	int	i;
 
+	newline = 1;
+	i = 1;
 	if (args[1] && strcmp(args[1], "-n") == 0)
 	{
 		newline = 0;
@@ -17,8 +19,7 @@ int builtin_echo(char **args)
 			printf(" ");
 		i++;
 	}
-
 	if (newline)
 		printf("\n");
-	return 0;
+	return (0);
 }

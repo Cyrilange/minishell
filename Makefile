@@ -22,16 +22,21 @@ SRC_FILES = \
 	src/built_ins/export_and_unset.c \
 	src/miniutils/matrix_str.c \
 	src/miniutils/errors.c \
+	src/parsing/condition_while_pipe.c \
+	src/parsing/handle_redirection.c \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
-	src/parsing/helper_functions.c \
+	src/parsing/handle_heredoc.c \
 	src/parsing/helper_small_function.c \
 	src/parsing/pipe_helper.c \
 	src/parsing/variables.c \
+	src/parsing/variables_helper.c \
 	src/parsing/helper_parse.c \
 	src/parsing/pipes.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
+	src/executor/get_input_and_free.c \
+	src/signals/signal.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -1,53 +1,43 @@
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
-#include <stdio.h>
-#include <unistd.h>
 
 int	g_status;
 
 t_prompt	set_initial_variables(char **argv, char **envp)
 {
-	t_prompt prompt;
+	t_prompt	prompt;
 
 	prompt.input = NULL;
 	prompt.envp = matrix_str_dup(envp, -1, NULL);
    //TODO get pid for the minishell process
    //TODO initialize essential variables
-	return prompt;
-}
-
-t_prompt initialize_variables(t_prompt prompt, char *str, char **argv)
-{
-
+	return (prompt);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void) argc; // Not in use right now
 	t_prompt	prompt;
-	
-	/* char **dup =  matrix_str_dup(prompt.envp); */
-	/* dup = matrix_str_add(dup, "hello"); */
-	/* matrix_str_print(dup); */
 	int			i;
 	int			j;
 	char		**matrix;
+	char		*input;
 
+	(void) argc;
+	setup_signal_handlers();
+	signal(SIGQUIT, SIG_IGN);
 	prompt = set_initial_variables(argv, envp);
 	i = 0;
 	j = 1;
 	while (1)
 	{
-		char *input = get_input(&prompt);
-		if (!input || !*input) // If input is empty or NULL, continue to the next iteration
+		input = get_input(&prompt);
+		if (!input || !*input)
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		command(input, &prompt.envp);
-		/* is_in_envp("hi", prompt.envp); */
-		/* matrix =  matrix_str_add(prompt.envp, "hello"); */
-		free(input); 
+		free(input);
 	}
-	return 0;
+	return (0);
 }

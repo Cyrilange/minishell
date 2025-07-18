@@ -2,82 +2,79 @@
 
 extern int	g_status;
 
-static char	*is_var_name(const char *str, int *len)
+static char	*process_special_variable(int *i, char *result)
 {
-	int i;
+	char	*status_str;
 
-	i = 0;
-	while (str[i] && is_var_char(str[i]))// Continue while characters are valid for variable names
-		i++;
-	*len = i;// Set the length of the variable name
-	if (i == 0 || (i == 1 && str[0] == '_'))// If no valid characters or only underscore, return NULL
-	{
-		return NULL;
-	}
-	return	ft_strndup(str, i);// Return a duplicate of the variable name
+	status_str = ft_itoa(g_status);
+	result = append_str(result, status_str);
+	free(status_str);
+	(*i)++;
+	return (result);
 }
 
-static char	*append_str(char *base, const char *add)// Append a string to another, allocating new memory if necessary
+static char	*process_variable_name(const char *str, int *i,
+			char *result, char **envp)
 {
-	if (!base)
-		return strdup(add);
-	char *new_str = malloc(ft_strlen(base) + ft_strlen(add) + 1);// Allocate memory for the new string
-	if (!new_str)
+	int		len;
+	char	*var_name;
+	char	*value;
+
+	len = 0;
+	var_name = is_var_name(&str[*i], &len);
+	if (var_name)
 	{
-		free(base);
-		return NULL;
+		value = get_env_var_value(var_name, envp);
+		free(var_name);
+		if (!value)
+			value = "";
+		result = append_str(result, value);
+		*i += len;
 	}
-	ft_strcpy(new_str, base);// Copy the base string to the new string
-	ft_strcat(new_str, add);// Append the additional string
-	free(base);// Free the base string
-	return new_str;// Return the new string
+	return (result);
 }
 
-char	*expand_variables(const char *str, t_quotes quote_type, char **envp)// Expand variables in a string based on the quote type
+static char	*process_dollar(const char *str, int *i, char *result, char **envp)
+{
+	(*i)++;
+	if (str[*i] == '?')
+		result = process_special_variable(i, result);
+	else if (isalpha(str[*i]) || str[*i] == '_')
+		result = process_variable_name(str, i, result, envp);
+	else
+		result = append_str(result, "$");
+	return (result);
+}
+
+static char	*process_normal_char(char c, char *result)
+{
+	char	tmp[2];
+
+	tmp[0] = c;
+	tmp[1] = 0;
+	return (append_str(result, tmp));
+}
+
+char	*expand_variables(const char *str, t_quotes quote_type, char **envp)
 {
 	int		i;
-	int		len;
 	char	*result;
 
-	if (quote_type == SINGLE_QUOTE)
-		return ft_strdup(str);// If single quotes, return the string as is
-
-	result = ft_strdup("");// Initialize result as an empty string
 	i = 0;
-	while (str[i])// Iterate through the string
+	if (quote_type == SINGLE_QUOTE)
+		return (ft_strdup(str));
+	result = ft_strdup("");
+	while (str[i])
 	{
-		if (str[i] == '$' && quote_type != SINGLE_QUOTE) // If we encounter a dollar sign and not in single quotes
-		{
-			i++;
-			if (str[i] == '?') //check for sepcial cases
-			{
-				result = ft_itoa(g_status);// Append exit status
-				i++;
-			}
-			else if (isalpha(str[i]) || str[i] == '_') // If the next character is a valid variable name start
-			{
-				len = 0;
-				char *var_name = is_var_name(&str[i], &len); // Extract the variable name
-				char *value = get_env_var_value(var_name, envp); // Get the value of the variable from the environment
-				free(var_name);
-				if (!value)
-					value = "";
-				result = append_str(result, value); // Append the variable value to the result
-				i += len;  // Move the index forward by the length of the variable name
-			}
-			else
-				result = append_str(result, "$"); // If not a valid variable name, just append the dollar sign
-		}
+		if (str[i] == '$' && quote_type != SINGLE_QUOTE)
+			result = process_dollar(str, &i, result, envp);
 		else
 		{
-			char tmp[2] = {str[i], 0}; // Create a temporary string for the current character
-			result = append_str(result, tmp); 	// Append the current character to the result
-			if (!result) // Check if memory allocation was successful
-				return NULL;
+			result = process_normal_char(str[i], result);
 			i++;
 		}
 		if (!result)
-			return NULL;
+			return (NULL);
 	}
-	return result; // Return the final expanded string
+	return (result);
 }

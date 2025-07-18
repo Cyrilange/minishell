@@ -1,16 +1,16 @@
 #include "../../includes/minishell.h"
 
-int builtin_exit(char **command)
+int	builtin_exit(char **command)
 {
-	int i;
+	int	i;
 
 	ft_putendl_fd("exit", 2);
 	if (matrix_len(command) > 2)
 		return (ft_putendl_fd("exit: too many arguments", 2), 1);
-	if(command[1] == NULL)
+	if (command[1] == NULL)
 		exit(0);
 	i = 0;
-	while(command[1][i] != '\0')
+	while (command[1][i] != '\0')
 	{
 		if (!ft_isdigit(command[1][i]))
 		{

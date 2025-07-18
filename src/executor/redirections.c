@@ -48,8 +48,10 @@ int execute_command(char **command, char ***envp)
                     get_cmd_path(*envp, &command[0], command[0]); // convert program name to abs path for execve
 				if (access(command[0], X_OK) == -1) // if path cant be executed
 				{
-                    g_status = 127;
-                    return (ft_error("Executable not found\n", false), 1); // throw error
+        		            g_status = 127;
+				    ft_putstr_fd("minishell: ", 2);
+				    ft_putstr_fd(command[0], 2);
+		                    return (ft_putstr_fd(": command not found\n", 2), 1); // throw error
 				}
                 pid_t pid = fork(); // create a child proc
 				if (pid == 0) // child proc
@@ -61,19 +63,4 @@ int execute_command(char **command, char ***envp)
 				}
 			}
         }
-}
-
-
-
-void	free_double_ptr(void **ptr)
-{
-	int	i;
-
-	i = 0;
-	while (ptr[i] != NULL)
-	{
-		free(ptr[i]);
-		i++;
-	}
-	free(ptr);
 }
