@@ -12,6 +12,6 @@ int		matrix_len(char **matrix);
 void	matrix_free(char ***matrix);
 
 // errors
-void	ft_error(char *str, bool exit_program);
+void	ft_error(char *str);
 
 #endif

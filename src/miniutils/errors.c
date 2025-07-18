@@ -1,13 +1,11 @@
 #include "miniutils.h"
 
-void	ft_error(char *str, bool exit_program)
+void	ft_error(char *str)
 {
 	int	i;
 
 	i = 0;
-	write(2, "Error: ", 8);
 	while (str[i] != '\0')
 		write(2, &str[i++], 1);
-	if (exit_program == true)
-		exit(1);
+	return ;
 }

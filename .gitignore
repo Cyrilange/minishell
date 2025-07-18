@@ -1,4 +1,6 @@
 .DS_Store
+compile_commands.json
+minishell
 cscope.out
 .idea
 *.log
@@ -15,3 +17,4 @@ yarn-error.log*
 includes/libft/*.o
 includes/libft/*.a
 includes/libft/.vscode
+.cache/
