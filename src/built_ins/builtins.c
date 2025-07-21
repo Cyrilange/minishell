@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-bool	is_builtin(char *command)
+bool is_builtin(char *command)
 {
 	if (command == NULL)
 		return (false);
@@ -21,10 +21,15 @@ bool	is_builtin(char *command)
 	return (false);
 }
 
-int	execute_builtin(char **args, char ***envp)
+int execute_builtin(char **args, char ***envp)
 {
+	int retvalue;
 	if (ft_strcmp(args[0], "cd") == 0)
-		return (builtin_cd(args[1]));
+	{
+		retvalue = builtin_cd(args[1], envp);
+		update_pwd(envp);
+		return retvalue;
+	}
 	else if (ft_strcmp(args[0], "echo") == 0)
 		return (builtin_echo(args));
 	else if (ft_strcmp(args[0], "pwd") == 0)

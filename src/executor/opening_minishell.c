@@ -3,68 +3,80 @@
 
 extern int g_status;
 
-static void handle_cmd_node(t_cmd_node *node, char ***envp) {
-  pid_t pid;
+static void handle_cmd_node(t_cmd_node *node, char ***envp)
+{
+	pid_t pid;
 
-  if (node->cmd->invalid_syntax)
-    return;
-  if (node->cmd->heredoc || node->cmd->infile || node->cmd->outfile) {
-    pid = fork();
-    if (pid == 0) {
-      if (node->cmd->heredoc)
-        handle_heredoc_if_needed(node->cmd);
-      if (node->cmd->infile)
-        redirect_infile(node->cmd->infile);
-      if (node->cmd->outfile)
-        redirect_outfile(node->cmd->outfile, node->cmd->append);
-      execute_command(node->cmd->args, envp);
-      exit(1);
-    } else
-      waitpid(pid, &g_status, 0);
-  } else
-    execute_command(node->cmd->args, envp);
+	if (node->cmd->invalid_syntax)
+		return;
+	if (node->cmd->heredoc || node->cmd->infile || node->cmd->outfile)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (node->cmd->heredoc)
+				handle_heredoc_if_needed(node->cmd);
+			if (node->cmd->infile)
+				redirect_infile(node->cmd->infile);
+			if (node->cmd->outfile)
+				redirect_outfile(node->cmd->outfile, node->cmd->append);
+			execute_command(node->cmd->args, envp);
+			exit(1);
+		}
+		else
+			waitpid(pid, &g_status, 0);
+	}
+	else
+		execute_command(node->cmd->args, envp);
 }
 
-static void execute_cmds(t_cmd_node *cmds, char ***envp) {
-  t_cmd_node *tmp;
+static void execute_cmds(t_cmd_node *cmds, char ***envp)
+{
+	t_cmd_node *tmp;
 
-  tmp = cmds;
-  while (tmp) {
-    handle_cmd_node(tmp, envp);
-    tmp = tmp->next;
-  }
+	tmp = cmds;
+	while (tmp)
+	{
+		handle_cmd_node(tmp, envp);
+		tmp = tmp->next;
+	}
 }
 
-static void free_tokens(t_token **tokens) {
-  int i;
+static void free_tokens(t_token **tokens)
+{
+	int i;
 
-  i = 0;
-  while (tokens[i]) {
-    free(tokens[i]->value);
-    free(tokens[i]);
-    i++;
-  }
-  free(tokens);
+	i = 0;
+	while (tokens[i])
+	{
+		free(tokens[i]->value);
+		free(tokens[i]);
+		i++;
+	}
+	free(tokens);
 }
 
-static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp) {
-  if (cmds && cmds->next)
-    execute_pipeline(cmds, envp);
-  else
-    execute_cmds(cmds, envp);
+static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
+{
+	if (cmds && cmds->next)
+		execute_pipeline(cmds, envp);
+	else
+		execute_cmds(cmds, envp);
 }
 
-void command(char *input, char ***envp) {
-  t_token **tokens;
-  t_cmd_node *cmds;
+void command(char *input, char ***envp)
+{
+	t_token	  **tokens;
+	t_cmd_node *cmds;
 
-  if (!input || !*input)
-    return;
-  tokens = tokenize_input(input);
-  if (!tokens)
-    return;
-  cmds = parse_pipeline_tokens(tokens, *envp);
-  execute_parsed_cmds(cmds, envp);
-  free_cmd_list(cmds);
-  free_tokens(tokens);
+	if (!input || !*input)
+		return;
+	tokens = tokenize_input(input);
+	if (!tokens)
+		return;
+	cmds = parse_pipeline_tokens(tokens, *envp);
+	execute_parsed_cmds(cmds, envp);
+	update_pwd(envp);
+	free_cmd_list(cmds);
+	free_tokens(tokens);
 }
