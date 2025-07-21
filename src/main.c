@@ -7,12 +7,14 @@ void initialize_essential_variables(char ***envp)
 {
 	// if (*envp == NULL)
 	*envp = matrix_str_add(*envp, "MINISHELL=1");
+	if (is_in_envp("PATH", *envp) == -1)
+		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
 	if (is_in_envp("SHLVL", *envp) == -1)
 		*envp = matrix_str_add(*envp, "SHLVL=1");
-	if (is_in_envp("PATH", *envp) == -1)
-		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
-	if (is_in_envp("PATH", *envp) == -1)
-		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
+	else
+		replace_env_var(
+			envp, "SHLVL=",
+			ft_itoa(ft_atoi(get_env_var_value("SHLVL", *envp)) + 1)); // ad + 1 for each shell level
 }
 
 t_prompt set_initial_variables(char **argv, char **envp)
