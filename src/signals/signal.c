@@ -12,9 +12,16 @@ void signal_reset_prompt(int signo)
 	g_status = 130;
 }
 
-void signal_print_newline(int signal)
+void noninteractive_sigint(int signal)
 {
 	(void)signal;
+	rl_on_new_line();
+}
+
+void noninteractive_sigquit(int signal)
+{
+	(void)signal;
+	printf("Quit (core dumped)\n");
 	rl_on_new_line();
 }
 
@@ -26,6 +33,6 @@ void set_signals_interactive(void)
 
 void set_signals_noninteractive(void)
 {
-	signal(SIGINT, signal_print_newline);
-	signal(SIGQUIT, signal_print_newline);
+	signal(SIGINT, noninteractive_sigint);
+	signal(SIGQUIT, noninteractive_sigquit);
 }
