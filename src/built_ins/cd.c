@@ -1,26 +1,28 @@
 #include "../../includes/minishell.h"
 
-static int	change_pwd(void)
+static int change_pwd(char ***envp)
 {
-	char	*cwd;
+	char *cwd;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
-	setenv("PWD", cwd, 1);
+	cwd = get_env_var_value("PWD", *envp);
+
+	update_pwd(envp);
 	free(cwd);
 	return (0);
 }
 
-static int	cd_home(void)
+static int cd_home(char ***envp)
 {
-	const char	*home;
-	const char	*pwd;
+	const char *home;
+	const char *pwd;
 
-	home = getenv("HOME");
-	pwd = getenv("PWD");
+	home = get_env_var_value("HOME", *envp);
+	pwd = get_env_var_value("PWD", *envp);
 	if (pwd)
-		setenv("OLDPWD", pwd, 1);
+		replace_env_var(envp, "OLDPWD=", pwd);
 	if (!home)
 	{
 		write(2, "minishell: cd: HOME not set\n", 29);
@@ -28,28 +30,32 @@ static int	cd_home(void)
 	}
 	if (chdir(home) == 0)
 	{
-		setenv("PWD", home, 1);
+		replace_env_var(envp, "PWD=", home);
 		return (0);
 	}
 	return (1);
 }
 
-static int	cd_error(char *path)
+static int cd_error(char *path)
 {
-	fprintf(stderr, "minishell: cd: `%s`: %s\n", path, strerror(errno));
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
 	return (1);
 }
 
-int	builtin_cd(char *path)
+int builtin_cd(char *path, char ***envp)
 {
-	const char	*pwd;
+	const char *pwd;
 
 	if (!path || *path == '\0')
-		return (cd_home());
+		return (cd_home(envp));
 	if (chdir(path) != 0)
 		return (cd_error(path));
-	pwd = getenv("PWD");
+	pwd = get_env_var_value("PWD", *envp);
 	if (pwd)
-		setenv("OLDPWD", pwd, 1);
-	return (change_pwd());
+		replace_env_var(envp, "OLDPWD=", pwd);
+	return (change_pwd(envp));
 }

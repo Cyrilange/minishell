@@ -1,18 +1,27 @@
 #include "../../includes/minishell.h"
 
-void	update_pwd(void)
+void replace_env_var(char ***envp, char *varname, char *value)
 {
-	char	cwd[1024];
-
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		setenv("PWD", cwd, 1);
+	int var_position;
+	var_position = is_in_envp(varname, *envp);
+	if (var_position == -1)
+		*envp = matrix_str_add(*envp, ft_strjoin(varname, value));
 	else
-		perror("getcwd");
+		*envp = matrix_str_dup(*envp, var_position, ft_strjoin(varname, value));
+	return;
 }
 
-int	builtin_pwd(void)
+void update_pwd(char ***envp)
 {
-	char	cwd[1024];
+	char cwd[1024];
+
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		replace_env_var(envp, "PWD=", cwd);
+}
+
+int builtin_pwd(void)
+{
+	char cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)))
 	{
