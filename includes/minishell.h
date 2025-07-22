@@ -15,6 +15,7 @@
 # include "../src/miniutils/miniutils.h"
 # include <fcntl.h>
 # include <signal.h>
+# include <sys/ioctl.h>
 
 typedef enum e_quotes_type
 {
@@ -125,4 +126,10 @@ int			get_cmd_path(char **envp, char **binpath, char *cmd);
 void		free_double_ptr(void **ptr);
 //signal
 void		setup_signal_handlers(void);
+
+void signal_reset_prompt(int signo);
+void ignore_sigquit(void);
+void set_signals_interactive(void);
+void signal_print_newline(int signal);
+void set_signals_noninteractive(void);
 #endif

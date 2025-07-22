@@ -38,11 +38,13 @@ int main(int argc, char **argv, char **envp)
 	char	*input;
 
 	(void)argc;
-	setup_signal_handlers();
+	// setup_signal_handlers();
 	prompt = set_initial_variables(argv, envp);
 	while (1)
 	{
+		set_signals_interactive();
 		input = get_input(&prompt);
+		set_signals_noninteractive();
 		if (!input)
 			continue;
 		if (!*input)

@@ -24,7 +24,9 @@ static void handle_cmd_node(t_cmd_node *node, char ***envp)
 			exit(1);
 		}
 		else
+		{
 			waitpid(pid, &g_status, 0);
+		}
 	}
 	else
 		execute_command(node->cmd->args, envp);
