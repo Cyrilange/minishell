@@ -2,6 +2,8 @@
 # define MINISHELL_H
 # define MAX_ARGS 1024
 
+#define PROMPT "\001\e[0m\e[33m\002minishell$ \001\e[0m\002"
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -95,7 +97,7 @@ char		*expand_variables(const char *str,
 				t_quotes quote_type, char **envp);
 int			is_special(char c);
 int			is_quote(char c);
-char		*read_multiline_command(char *prompt);
+char *read_multiline_command(void);
 //help variables
 char		*append_str(char *base, const char *add);
 char		*is_var_name(const char *str, int *len);

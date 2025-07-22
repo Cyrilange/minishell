@@ -32,20 +32,9 @@ void free_cmd_list(t_cmd_node *cmds)
 
 char *get_input(t_prompt *prompt)
 {
-	char *cwd;
-	char *prompt_str;
 	char *input;
 
-	cwd = get_env_var_value("PWD", prompt->envp);
-	if (cwd)
-		prompt_str = ft_strjoin("\033[0;32mminishell> \033[0;34m", cwd);
-	else
-		prompt_str = ft_strdup("\033[0;32mminishell> \033[0m");
-	char *tmp = prompt_str;
-	prompt_str = ft_strjoin(tmp, "\033[0m $ ");
-	free(tmp);
-	input = read_multiline_command(prompt_str);
-	free(prompt_str);
+	input = read_multiline_command();
 	if (!input)
 	{
 		printf("exit\n");

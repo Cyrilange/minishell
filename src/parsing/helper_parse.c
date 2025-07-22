@@ -20,13 +20,13 @@ static int quotes_are_closed(const char *str)
 	return (single % 2 == 0 && dbl % 2 == 0);
 }
 
-char *read_multiline_command(char *prompt)
+char *read_multiline_command(void)
 {
 	char *line;
 	char *full_line;
 	char *tmp;
 
-	line = readline(prompt);
+	line = readline(PROMPT);
 	set_signals_noninteractive();
 	if (!line)
 		return (NULL);
