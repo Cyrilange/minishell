@@ -42,6 +42,9 @@ bool is_path(char *command)
 
 int execute_command(char **command, char ***envp)
 {
+	char *save_cmd_name;
+
+	save_cmd_name = command[0];
 	if (command && command[0]) // Execute command
 	{
 		if (is_builtin(command[0]) == true) // if its a builtin
@@ -55,7 +58,7 @@ int execute_command(char **command, char ***envp)
 			{
 				g_status = 127;
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(command[0], 2);
+				ft_putstr_fd(save_cmd_name, 2);
 				return (ft_putstr_fd(": command not found\n", 2), 1); // throw error
 			}
 			pid_t pid = fork(); // create a child proc
