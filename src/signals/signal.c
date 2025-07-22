@@ -8,8 +8,7 @@ static void	sigint_handler(int signo)
 	g_status = 130;
 	write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
-	rl_replace_line("", 0);	
-	rl_redisplay();
+	rl_replace_line("", 0);
     g_status = 130;
 }
 

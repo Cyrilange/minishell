@@ -39,12 +39,13 @@ int main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	setup_signal_handlers();
-	signal(SIGQUIT, SIG_IGN);
 	prompt = set_initial_variables(argv, envp);
 	while (1)
 	{
 		input = get_input(&prompt);
-		if (!input || !*input)
+		if (!input)
+			continue;
+		if (!*input)
 		{
 			free(input);
 			continue;
