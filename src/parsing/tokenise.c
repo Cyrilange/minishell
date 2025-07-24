@@ -53,21 +53,68 @@ static t_token	*parse_word(t_prompt *data)
 	return (create_token(ft_strndup(&data->input[start], len), NO_QUOTE));
 }
 
-static t_token	*extract_token(t_prompt *data)
+static int is_assignment_start(t_prompt *data)
 {
-	char	c;
+    int temp_i = data->i;
 
+    if (!isalpha(data->input[temp_i]) && data->input[temp_i] != '_')
+        return (0);
+    while (data->input[temp_i] && (isalnum(data->input[temp_i]) || data->input[temp_i] == '_'))
+        temp_i++;
+    return (data->input[temp_i] == '=');
+}
+static t_token *parse_assignment(t_prompt *data)
+{
+    int start = data->i;
+    char *result = malloc(1000);
+    int pos = 0;
+    
+    while (data->input[data->i] && data->input[data->i] != '=')
+        result[pos++] = data->input[data->i++];
+    
+    if (data->input[data->i] == '=')
+    {
+        result[pos++] = data->input[data->i++];
+        if (data->input[data->i] == '"' || data->input[data->i] == '\'')
+        {
+            char quote = data->input[data->i++]; // Skip opening quote
+            while (data->input[data->i] && data->input[data->i] != quote)
+                result[pos++] = data->input[data->i++];
+            if (data->input[data->i] == quote)
+                data->i++; // Skip closing quote
+        }
+        else
+        {
+            while (data->input[data->i] && !isspace(data->input[data->i]) 
+                   && !is_special(data->input[data->i]))
+                result[pos++] = data->input[data->i++];
+        }
+    }
+    
+    result[pos] = '\0';
+    char *final_result = ft_strdup(result);
+    free(result);
+    return create_token(final_result, NO_QUOTE);
+}
+
+static t_token *extract_token(t_prompt *data)
+{
+    char c;
+	
 	c = data->input[data->i];
-	if (c == '>' || c == '<')
-		return (parse_redirection(data));
-	if (c == '|')
-	{
-		data->i++;
-		return (create_token(ft_strdup("|"), NO_QUOTE));
-	}
-	if (c == '\'' || c == '"')
-		return (parse_quote(data));
-	return (parse_word(data));
+    
+    if (is_assignment_start(data))
+        return (parse_assignment(data));
+    if (c == '>' || c == '<')
+        return (parse_redirection(data));
+    if (c == '|')
+    {
+        data->i++;
+        return (create_token(ft_strdup("|"), NO_QUOTE));
+    }
+    if (c == '\'' || c == '"')
+        return (parse_quote(data));
+    return (parse_word(data));
 }
 
 t_token	**tokenize_input(char *input)
