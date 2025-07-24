@@ -33,6 +33,7 @@ SRC_FILES = \
 	src/parsing/variables_helper.c \
 	src/parsing/helper_parse.c \
 	src/parsing/pipes.c \
+	src/parsing/tilde.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
 	src/executor/get_input_and_free.c \
