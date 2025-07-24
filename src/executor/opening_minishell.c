@@ -72,16 +72,22 @@ void command(char *input, char ***envp)
 	t_cmd_node *cmds;
 	t_pipe_ctx *ctx;
 
-	ctx = malloc(sizeof(t_pipe_ctx));
 	if (!input || !*input)
 		return;
 	tokens = tokenize_input(input);
 	if (!tokens)
 		return;
+	ctx = malloc(sizeof(t_pipe_ctx));
+	if (!ctx)
+	{
+		free_tokens(tokens);
+		return;
+	}
 	cmds = parse_pipeline_tokens(tokens, *envp, ctx);
 	expand_tildes_in_tokens(tokens, *envp);
 	execute_parsed_cmds(cmds, envp);
 	update_pwd(envp);
 	free_cmd_list(cmds);
 	free_tokens(tokens);
+	free(ctx);
 }

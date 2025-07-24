@@ -5,12 +5,20 @@ extern int g_status;
 static char *process_special_variable(int *i, char *result)
 {
 	char *status_str;
+	char *tmp_res;
 
 	status_str = ft_itoa(g_status);
-	result = append_str(result, status_str);
+	if (!status_str)
+	{
+		free(result);
+		return (NULL);
+	}
+	tmp_res = append_str(result, status_str);
 	free(status_str);
+	if (!tmp_res)
+		return (NULL);
 	(*i)++;
-	return (result);
+	return (tmp_res);
 }
 
 static char *process_variable_name(const char *str, int *i, char *result, char **envp)
@@ -19,6 +27,7 @@ static char *process_variable_name(const char *str, int *i, char *result, char *
 	char *var_name;
 	char *value;
 	bool  freevalue;
+	char *tmp_result;
 
 	len = 0;
 	var_name = is_var_name(&str[*i], &len);
@@ -32,13 +41,20 @@ static char *process_variable_name(const char *str, int *i, char *result, char *
 			freevalue = false;
 			value = "";
 		}
-		result = append_str(result, value);
-		*i += len;
-		if (freevalue == true)
+		tmp_result = append_str(result, value);
+		if (freevalue)
 			free(value);
+		if (!tmp_result)
+		{
+			free(result);
+			return (NULL);
+		}
+		result = tmp_result;
+		*i += len;
 	}
 	return (result);
 }
+
 
 static char *process_dollar(const char *str, int *i, char *result, char **envp)
 {

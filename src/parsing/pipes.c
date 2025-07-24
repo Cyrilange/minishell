@@ -8,7 +8,7 @@ void init_parse(t_parse_ctx *pctx)
 	pctx->cmd = calloc(1, sizeof(t_cmd));
 	if (!pctx->cmd)
 		return;
-	free(pctx->cmd->args);
+	
 	pctx->cmd->args = NULL;
 	pctx->cmd->infile = NULL;
 	pctx->cmd->outfile = NULL;
@@ -18,7 +18,11 @@ void init_parse(t_parse_ctx *pctx)
 	pctx->cmd->invalid_syntax = 0;
 	pctx->args = malloc(sizeof(char *) * (MAX_ARGS + 1));
 	if (!pctx->args)
-		return;
+    {
+        free(pctx->cmd);
+        pctx->cmd = NULL;
+        return;
+    }
 	while (i <= MAX_ARGS)
 	{
 		pctx->args[i] = NULL;
@@ -36,9 +40,11 @@ void add_cmd_node(t_parse_ctx *pctx)
 	node = malloc(sizeof(t_cmd_node));
 	if (!node)
 	{
-		free(pctx->cmd->args);
-		free(pctx->cmd);
-		return;
+		free_double_ptr((void **)pctx->cmd->args);
+        free(pctx->cmd);
+        pctx->cmd = NULL; 
+        pctx->args = NULL;
+        return;
 	}
 	node->cmd = pctx->cmd;
 	node->next = NULL;
@@ -73,7 +79,6 @@ t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp, t_pipe_ctx *ctx
 	while (ctx->tokens[ctx->i])
 		condition_while_pipe(ctx);
 	add_cmd_node(&ctx->pctx);
-	// free_double_ptr((void **)ctx.pctx.args);
-	// free_double_ptr((void **)ctx.pctx.args);
+
 	return (cmds);
 }
