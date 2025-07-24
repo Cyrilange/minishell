@@ -134,4 +134,8 @@ void ignore_sigquit(void);
 void set_signals_interactive(void);
 void signal_print_newline(int signal);
 void set_signals_noninteractive(void);
+
+//tildes
+void expand_tildes_in_tokens(t_token **tokens, char **envp);
+char *expand_tilde(char *path, char **envp);
 #endif

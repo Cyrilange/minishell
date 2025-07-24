@@ -76,6 +76,7 @@ void command(char *input, char ***envp)
 	tokens = tokenize_input(input);
 	if (!tokens)
 		return;
+	expand_tildes_in_tokens(tokens, *envp);
 	cmds = parse_pipeline_tokens(tokens, *envp);
 	execute_parsed_cmds(cmds, envp);
 	update_pwd(envp);
