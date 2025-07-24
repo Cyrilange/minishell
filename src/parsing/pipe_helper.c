@@ -2,7 +2,11 @@
 
 void handle_token(t_token *token, char **args, int *arg_i, char **envp)
 {
-	process_token(token, args, arg_i, envp);
+
+	if (token->quote_type != SINGLE_QUOTE)
+		args[(*arg_i)++] = expand_variables(token->value, token->quote_type, envp);
+	else
+		args[(*arg_i)++] = ft_strdup(token->value);
 }
 
 static void child_process(t_cmd_node *cmd, int pipe_fd[2], int in_fd, char ***envp)

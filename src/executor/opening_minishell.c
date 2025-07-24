@@ -66,19 +66,32 @@ static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
 		execute_cmds(cmds, envp);
 }
 
+void free_pipe_ctx(t_pipe_ctx *ctx)
+{
+	if (!ctx)
+		return;
+	free(ctx->pctx.cmd->heredoc_delimiter);
+	for (int i = 0; ctx->pctx.args[i]; i++)
+		free(ctx->pctx.args[i]);
+	free(ctx->pctx.args);
+	free(ctx);
+}
 void command(char *input, char ***envp)
 {
 	t_token	  **tokens;
 	t_cmd_node *cmds;
+	t_pipe_ctx *ctx;
 
+	ctx = malloc(sizeof(t_pipe_ctx));
 	if (!input || !*input)
 		return;
 	tokens = tokenize_input(input);
 	if (!tokens)
 		return;
-	cmds = parse_pipeline_tokens(tokens, *envp);
+	cmds = parse_pipeline_tokens(tokens, *envp, ctx);
 	execute_parsed_cmds(cmds, envp);
 	update_pwd(envp);
 	free_cmd_list(cmds);
 	free_tokens(tokens);
+	free_pipe_ctx(ctx);
 }

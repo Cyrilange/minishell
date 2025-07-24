@@ -1,13 +1,14 @@
 #include "../../includes/minishell.h"
 
-void	init_parse(t_parse_ctx *pctx)
+void init_parse(t_parse_ctx *pctx)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	pctx->cmd = calloc(1, sizeof(t_cmd));
 	if (!pctx->cmd)
 		return;
+	free(pctx->cmd->args);
 	pctx->cmd->args = NULL;
 	pctx->cmd->infile = NULL;
 	pctx->cmd->outfile = NULL;
@@ -26,10 +27,9 @@ void	init_parse(t_parse_ctx *pctx)
 	pctx->arg_i = 0;
 }
 
-
-void	add_cmd_node(t_parse_ctx *pctx)
+void add_cmd_node(t_parse_ctx *pctx)
 {
-	t_cmd_node	*node;
+	t_cmd_node *node;
 
 	pctx->args[pctx->arg_i] = NULL;
 	pctx->cmd->args = pctx->args;
@@ -38,7 +38,7 @@ void	add_cmd_node(t_parse_ctx *pctx)
 	{
 		free(pctx->cmd->args);
 		free(pctx->cmd);
-		return ;
+		return;
 	}
 	node->cmd = pctx->cmd;
 	node->next = NULL;
@@ -49,31 +49,31 @@ void	add_cmd_node(t_parse_ctx *pctx)
 	*pctx->last = node;
 }
 
-void	process_token(t_token *token, char **args, int *arg_i, char **envp)
+void process_token(t_token *token, char **args, int *arg_i, char **envp)
 {
 	if (token->quote_type != SINGLE_QUOTE)
-		args[(*arg_i)++] = expand_variables(token->value,
-				token->quote_type, envp);
+		args[(*arg_i)++] = expand_variables(token->value, token->quote_type, envp);
 	else
 		args[(*arg_i)++] = ft_strdup(token->value);
 }
 
-t_cmd_node	*parse_pipeline_tokens(t_token **tokens, char **envp)
+t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp, t_pipe_ctx *ctx)
 {
-	t_pipe_ctx	ctx;
-	t_cmd_node	*cmds;
-	t_cmd_node	*last;
+	t_cmd_node *cmds;
+	t_cmd_node *last;
 
 	cmds = NULL;
 	last = NULL;
-	ctx.tokens = tokens;
-	ctx.i = 0;
-	ctx.pctx.cmds = &cmds;
-	ctx.pctx.last = &last;
-	init_parse(&ctx.pctx);
-	ctx.envp = envp;
-	while (ctx.tokens[ctx.i])
-		condition_while_pipe(&ctx);
-	add_cmd_node(&ctx.pctx);
+	ctx->tokens = tokens;
+	ctx->i = 0;
+	ctx->pctx.cmds = &cmds;
+	ctx->pctx.last = &last;
+	init_parse(&ctx->pctx);
+	ctx->envp = envp;
+	while (ctx->tokens[ctx->i])
+		condition_while_pipe(ctx);
+	add_cmd_node(&ctx->pctx);
+	// free_double_ptr((void **)ctx.pctx.args);
+	// free_double_ptr((void **)ctx.pctx.args);
 	return (cmds);
 }

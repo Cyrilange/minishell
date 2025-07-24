@@ -58,13 +58,15 @@ static char *process_normal_char(char c, char *result)
 
 	tmp[0] = c;
 	tmp[1] = 0;
-	return (append_str(result, tmp));
+	char *r = append_str(result, tmp);
+	return (r);
 }
 
 char *expand_variables(const char *str, t_quotes quote_type, char **envp)
 {
 	int	  i;
 	char *result;
+	char *tmp;
 
 	i = 0;
 	if (quote_type == SINGLE_QUOTE)

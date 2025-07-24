@@ -20,7 +20,7 @@ static int quotes_are_closed(const char *str)
 	return (single % 2 == 0 && dbl % 2 == 0);
 }
 
-char *read_multiline_command(void)
+char *read_multiline_command(t_prompt *prompt)
 {
 	char *line;
 	char *full_line;
@@ -29,7 +29,7 @@ char *read_multiline_command(void)
 	line = readline(PROMPT);
 	if (line == NULL)
 	{
-		printf("\nEXITING PROGRAM!\n");
+		cleanup(prompt);
 	}
 	set_signals_noninteractive();
 	if (!line)

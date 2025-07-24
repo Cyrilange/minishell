@@ -97,7 +97,7 @@ char		*expand_variables(const char *str,
 				t_quotes quote_type, char **envp);
 int			is_special(char c);
 int			is_quote(char c);
-char *read_multiline_command(void);
+char *read_multiline_command(t_prompt *prompt);
 //help variables
 char		*append_str(char *base, const char *add);
 char		*is_var_name(const char *str, int *len);
@@ -105,7 +105,7 @@ char		*is_var_name(const char *str, int *len);
 char		*handle_heredoc(char *delimiter);
 void		handle_heredoc_if_needed(t_cmd *cmd);
 //pipe 
-t_cmd_node	*parse_pipeline_tokens(t_token **tokens, char **envp);
+t_cmd_node *parse_pipeline_tokens(t_token **tokens, char **envp, t_pipe_ctx *ctx);
 void		free_cmd_list(t_cmd_node *cmds);
 void		handle_token(t_token *token, char **args, int *arg_i, char **envp);
 void		handle_redirection(t_token **tokens, int *i, t_cmd *cmd);
@@ -134,4 +134,5 @@ void ignore_sigquit(void);
 void set_signals_interactive(void);
 void signal_print_newline(int signal);
 void set_signals_noninteractive(void);
+void cleanup(t_prompt *prompt);
 #endif

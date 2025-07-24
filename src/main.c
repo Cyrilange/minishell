@@ -63,3 +63,21 @@ int main(int argc, char **argv, char **envp)
 	printf("\n EXITING\n");
 	return (0);
 }
+
+// int main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	char **strs;
+// 	char **tmp;
+// 	// strs = matrix_str_dup(envp, -1, NULL);
+// 	strs = NULL;
+// 	strs = matrix_str_add(strs, "helloworld");
+// 	strs = matrix_str_dup(strs, -1, NULL);
+// 	// strs = matrix_str_add(strs, "anotherworkd");
+// 	(void)tmp;
+// 	(void)strs;
+// 	matrix_free(&strs);
+// 	matrix_free(&tmp);
+// 	return 0;
+// }

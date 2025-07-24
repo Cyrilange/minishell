@@ -31,6 +31,8 @@ void redirect_infile(char *fil)
 bool is_path(char *command)
 {
 	int i = 0;
+	if (command == NULL)
+		return false;
 	while (command[i] != '\0')
 	{
 		if (command[i] == '/')

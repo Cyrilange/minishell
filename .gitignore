@@ -9,6 +9,7 @@ vgcore.*
 *.tern-port
 node_modules/
 npm-debug.log*
+valgrind*
 yarn-debug.log*
 yarn-error.log*
 *.tsbuildinfo
