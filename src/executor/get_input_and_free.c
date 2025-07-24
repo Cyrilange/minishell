@@ -34,7 +34,7 @@ char *get_input(t_prompt *prompt)
 {
 	char *input;
 
-	input = read_multiline_command();
+	input = read_multiline_command(prompt);
 	if (!input)
 	{
 		printf("exit\n");

@@ -38,6 +38,7 @@ SRC_FILES = \
 	src/executor/search_binary.c \
 	src/executor/get_input_and_free.c \
 	src/signals/signal.c \
+	src/cleanup.c \
 
 # Convert source files into object files
 OBJS        = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

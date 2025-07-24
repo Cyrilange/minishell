@@ -2,12 +2,20 @@
 
 void replace_env_var(char ***envp, char *varname, char *value)
 {
-	int var_position;
+	int	   var_position;
+	char  *tmp;
+	char **tmp_envp;
 	var_position = is_in_envp(varname, *envp);
+	tmp = ft_strjoin(varname, value);
 	if (var_position == -1)
-		*envp = matrix_str_add(*envp, ft_strjoin(varname, value));
+		*envp = matrix_str_add(*envp, tmp);
 	else
-		*envp = matrix_str_dup(*envp, var_position, ft_strjoin(varname, value));
+	{
+		tmp_envp = matrix_str_dup(*envp, var_position, tmp);
+		matrix_free(envp);
+		*envp = tmp_envp;
+	}
+	free(tmp);
 	return;
 }
 
