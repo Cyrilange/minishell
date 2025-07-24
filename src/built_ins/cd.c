@@ -16,8 +16,8 @@ static int change_pwd(char ***envp)
 
 static int cd_home(char ***envp)
 {
-	const char *home;
-	const char *pwd;
+	char *home;
+	char *pwd;
 
 	home = get_env_var_value("HOME", *envp);
 	pwd = get_env_var_value("PWD", *envp);
@@ -33,6 +33,8 @@ static int cd_home(char ***envp)
 		replace_env_var(envp, "PWD=", home);
 		return (0);
 	}
+	free(home);
+	free(pwd);
 	return (1);
 }
 
@@ -48,7 +50,7 @@ static int cd_error(char *path)
 
 int builtin_cd(char *path, char ***envp)
 {
-	const char *pwd;
+	char *pwd;
 
 	if (!path || *path == '\0')
 		return (cd_home(envp));
@@ -57,5 +59,5 @@ int builtin_cd(char *path, char ***envp)
 	pwd = get_env_var_value("PWD", *envp);
 	if (pwd)
 		replace_env_var(envp, "OLDPWD=", pwd);
-	return (change_pwd(envp));
+	return (free(pwd), change_pwd(envp));
 }

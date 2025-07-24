@@ -1,10 +1,10 @@
 #include "../../includes/minishell.h"
 
-extern int	g_status;
+extern int g_status;
 
-static char	*process_special_variable(int *i, char *result)
+static char *process_special_variable(int *i, char *result)
 {
-	char	*status_str;
+	char *status_str;
 
 	status_str = ft_itoa(g_status);
 	result = append_str(result, status_str);
@@ -13,28 +13,34 @@ static char	*process_special_variable(int *i, char *result)
 	return (result);
 }
 
-static char	*process_variable_name(const char *str, int *i,
-			char *result, char **envp)
+static char *process_variable_name(const char *str, int *i, char *result, char **envp)
 {
-	int		len;
-	char	*var_name;
-	char	*value;
+	int	  len;
+	char *var_name;
+	char *value;
+	bool  freevalue;
 
 	len = 0;
 	var_name = is_var_name(&str[*i], &len);
 	if (var_name)
 	{
 		value = get_env_var_value(var_name, envp);
+		freevalue = true;
 		free(var_name);
 		if (!value)
+		{
+			freevalue = false;
 			value = "";
+		}
 		result = append_str(result, value);
 		*i += len;
+		if (freevalue == true)
+			free(value);
 	}
 	return (result);
 }
 
-static char	*process_dollar(const char *str, int *i, char *result, char **envp)
+static char *process_dollar(const char *str, int *i, char *result, char **envp)
 {
 	(*i)++;
 	if (str[*i] == '?')
@@ -46,19 +52,19 @@ static char	*process_dollar(const char *str, int *i, char *result, char **envp)
 	return (result);
 }
 
-static char	*process_normal_char(char c, char *result)
+static char *process_normal_char(char c, char *result)
 {
-	char	tmp[2];
+	char tmp[2];
 
 	tmp[0] = c;
 	tmp[1] = 0;
 	return (append_str(result, tmp));
 }
 
-char	*expand_variables(const char *str, t_quotes quote_type, char **envp)
+char *expand_variables(const char *str, t_quotes quote_type, char **envp)
 {
-	int		i;
-	char	*result;
+	int	  i;
+	char *result;
 
 	i = 0;
 	if (quote_type == SINGLE_QUOTE)
