@@ -2,7 +2,7 @@ NAME        = minishell
 
 LIBFT       = ./includes/libft
 
-CC          = cc # it has to be cc, not gcc
+CC          = gcc # it has to be cc, not gcc
 CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes
 LDFLAGS     = -lreadline
 
@@ -64,7 +64,6 @@ clean:
 
 # Clean all
 fclean: clean
-	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT) fclean
 
 # Rebuild everything

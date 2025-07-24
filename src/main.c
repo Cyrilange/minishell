@@ -5,16 +5,21 @@ int g_status;
 
 void initialize_essential_variables(char ***envp)
 {
-	// if (*envp == NULL)
+	char *shlvl;
+	char *tmp;
 	*envp = matrix_str_add(*envp, "MINISHELL=1");
 	if (is_in_envp("PATH", *envp) == -1)
 		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
 	if (is_in_envp("SHLVL", *envp) == -1)
 		*envp = matrix_str_add(*envp, "SHLVL=1");
 	else
-		replace_env_var(
-			envp, "SHLVL=",
-			ft_itoa(ft_atoi(get_env_var_value("SHLVL", *envp)) + 1)); // ad + 1 for each shell level
+	{
+		shlvl = get_env_var_value("SHLVL", *envp); // ad + 1 for each shell level
+		tmp = ft_itoa(ft_atoi(shlvl) + 1);
+		replace_env_var(envp, "SHLVL=", shlvl);
+		free(tmp);
+		free(shlvl);
+	}
 }
 
 t_prompt set_initial_variables(char **argv, char **envp)
@@ -38,7 +43,7 @@ int main(int argc, char **argv, char **envp)
 	char	*input;
 
 	(void)argc;
-	// setup_signal_handlers();
+	argc = 1;
 	prompt = set_initial_variables(argv, envp);
 	while (1)
 	{
@@ -55,16 +60,6 @@ int main(int argc, char **argv, char **envp)
 		command(input, &prompt.envp);
 		free(input);
 	}
-	while (true)
-	{
-		free(input);
-	}
+	printf("\n EXITING\n");
 	return (0);
 }
-// int main(int argc, char **argv, char **envp)
-// {
-// 	char **matrix = NULL;
-// 	matrix = matrix_str_add(matrix, "hello");
-// 	matrix_str_print(matrix);
-// 	return (0);
-// }

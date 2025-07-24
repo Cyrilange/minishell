@@ -27,6 +27,10 @@ char *read_multiline_command(void)
 	char *tmp;
 
 	line = readline(PROMPT);
+	if (line == NULL)
+	{
+		printf("\nEXITING PROGRAM!\n");
+	}
 	set_signals_noninteractive();
 	if (!line)
 		return (NULL);

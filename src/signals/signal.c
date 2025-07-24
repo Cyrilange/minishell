@@ -25,14 +25,14 @@ void noninteractive_sigquit(int signal)
 	rl_on_new_line();
 }
 
-void set_signals_interactive(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, signal_reset_prompt);
-}
-
 void set_signals_noninteractive(void)
 {
 	signal(SIGINT, noninteractive_sigint);
 	signal(SIGQUIT, noninteractive_sigquit);
+}
+
+void set_signals_interactive(void)
+{
+	signal(SIGINT, signal_reset_prompt);
+	signal(SIGQUIT, SIG_IGN);
 }
