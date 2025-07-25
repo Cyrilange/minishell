@@ -3,6 +3,18 @@
 
 extern int g_status;
 
+static void	free_args(char **args)
+{
+	int	i;
+
+	if (!args)
+		return;
+	i = 0;
+	while (args[i])
+		free(args[i++]);
+	free(args);
+}
+
 static void handle_cmd_node(t_cmd_node *node, char ***envp)
 {
 	pid_t pid;
@@ -21,6 +33,7 @@ static void handle_cmd_node(t_cmd_node *node, char ***envp)
 			if (node->cmd->outfile)
 				redirect_outfile(node->cmd->outfile, node->cmd->append);
 			execute_command(node->cmd->args, envp);
+			free_args(node->cmd->args);
 			exit(1);
 		}
 		else
@@ -30,6 +43,8 @@ static void handle_cmd_node(t_cmd_node *node, char ***envp)
 	}
 	else
 		execute_command(node->cmd->args, envp);
+	free_args(node->cmd->args);
+	node->cmd->args = NULL;
 }
 
 static void execute_cmds(t_cmd_node *cmds, char ***envp)
