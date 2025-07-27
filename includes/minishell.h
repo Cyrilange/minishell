@@ -2,7 +2,7 @@
 # define MINISHELL_H
 # define MAX_ARGS 1024
 
-#define PROMPT "\001\e[0m\e[33m\002minishell$ \001\e[0m\002"
+#define PROMPT "\001\e[1m\e[93m\002minishell$ \001\e[0m\002"
 
 # include <stdio.h>
 # include <stdlib.h>
