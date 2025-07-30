@@ -2,7 +2,7 @@ NAME        = minishell
 
 LIBFT       = ./includes/libft
 
-CC          = cc # it has to be cc, not gcc
+CC          = cc
 CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes -fsanitize=address
 LDFLAGS     = -lreadline
 

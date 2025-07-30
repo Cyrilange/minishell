@@ -62,7 +62,6 @@ int main(int argc, char **argv)
 
 	}
 	printf("\n EXITING\n");
-	clear_history();
 	rl_clear_history(); 
 	return (0);
 }
