@@ -59,8 +59,11 @@ int main(int argc, char **argv)
 		}
 		command(input, &prompt.envp);
 		free(input);
+
 	}
 	printf("\n EXITING\n");
+	clear_history();
+	rl_clear_history(); 
 	return (0);
 }
 

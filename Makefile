@@ -2,8 +2,8 @@ NAME        = minishell
 
 LIBFT       = ./includes/libft
 
-CC          = gcc # it has to be cc, not gcc
-CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes
+CC          = cc # it has to be cc, not gcc
+CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes -fsanitize=address
 LDFLAGS     = -lreadline
 
 
@@ -60,13 +60,14 @@ $(NAME): $(OBJS) $(LIBFT)/libft.a
 $(LIBFT)/libft.a:
 	@$(MAKE) -C $(LIBFT)
 
-# Clean object files
 clean:
+	@echo "Cleaning object files..."
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -C $(LIBFT) clean
 
-# Clean all
 fclean: clean
+	@echo "Cleaning executable and libft..."
+	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT) fclean
 
 # Rebuild everything
