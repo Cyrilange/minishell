@@ -1,4 +1,6 @@
-#include "../../includes/minishell.h"
+#include "../../includes/minishell.h" condition pipe
+
+
 
 static void handle_pipe(t_pipe_ctx *ctx)
 {

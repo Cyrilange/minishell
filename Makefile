@@ -36,6 +36,7 @@ SRC_FILES = \
 	src/parsing/tilde.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
+	src/executor/execute_command.c \
 	src/executor/get_input_and_free.c \
 	src/signals/signal.c \
 	src/cleanup.c \

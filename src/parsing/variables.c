@@ -1,10 +1,13 @@
-#include "../../includes/minishell.h"
+#include "../../includes/minishell.h" //varaib;e
+
 
 extern int g_status;
+
 
 static char *process_special_variable(int *i, char *result)
 {
 	char *status_str;
+
 
 	status_str = ft_itoa(g_status);
 	result = append_str(result, status_str);
@@ -13,12 +16,14 @@ static char *process_special_variable(int *i, char *result)
 	return (result);
 }
 
+
 static char *process_variable_name(const char *str, int *i, char *result, char **envp)
 {
 	int	  len;
 	char *var_name;
 	char *value;
 	bool  freevalue;
+
 
 	len = 0;
 	var_name = is_var_name(&str[*i], &len);
@@ -40,6 +45,7 @@ static char *process_variable_name(const char *str, int *i, char *result, char *
 	return (result);
 }
 
+
 static char *process_dollar(const char *str, int *i, char *result, char **envp)
 {
 	(*i)++;
@@ -52,9 +58,11 @@ static char *process_dollar(const char *str, int *i, char *result, char **envp)
 	return (result);
 }
 
+
 static char *process_normal_char(char c, char *result)
 {
 	char tmp[2];
+
 
 	tmp[0] = c;
 	tmp[1] = 0;
@@ -62,11 +70,12 @@ static char *process_normal_char(char c, char *result)
 	return (r);
 }
 
+
 char *expand_variables(const char *str, t_quotes quote_type, char **envp)
 {
 	int	  i;
 	char *result;
-	char *tmp;
+
 
 	i = 0;
 	if (quote_type == SINGLE_QUOTE)

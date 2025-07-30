@@ -1,11 +1,15 @@
+
 #include "../../includes/minishell.h"
 #include <stdio.h>
 
+
 extern int g_status;
+
 
 static void handle_cmd_node(t_cmd_node *node, char ***envp)
 {
 	pid_t pid;
+
 
 	if (node->cmd->invalid_syntax)
 		return;
@@ -32,9 +36,11 @@ static void handle_cmd_node(t_cmd_node *node, char ***envp)
 		execute_command(node->cmd->args, envp);
 }
 
+
 static void execute_cmds(t_cmd_node *cmds, char ***envp)
 {
 	t_cmd_node *tmp;
+
 
 	tmp = cmds;
 	while (tmp)
@@ -44,9 +50,11 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 	}
 }
 
+
 static void free_tokens(t_token **tokens)
 {
 	int i;
+
 
 	i = 0;
 	while (tokens[i])
@@ -58,6 +66,7 @@ static void free_tokens(t_token **tokens)
 	free(tokens);
 }
 
+
 static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
 {
 	if (cmds && cmds->next)
@@ -66,11 +75,13 @@ static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
 		execute_cmds(cmds, envp);
 }
 
+
 void command(char *input, char ***envp)
 {
 	t_token	  **tokens;
 	t_cmd_node *cmds;
 	t_pipe_ctx *ctx;
+
 
 	ctx = malloc(sizeof(t_pipe_ctx));
 	if (!input || !*input)
@@ -84,4 +95,7 @@ void command(char *input, char ***envp)
 	update_pwd(envp);
 	free_cmd_list(cmds);
 	free_tokens(tokens);
+	free(ctx);
 }
+
+
