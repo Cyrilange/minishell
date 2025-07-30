@@ -61,10 +61,8 @@ int builtin_unset(char **command, char ***envp)
 {
 	int	   i;
 	int	   var_position;
-	char **newenvp;
 	char  *varname;
 
-	newenvp = (NULL);
 	if (matrix_len(command) >= 2)
 	{
 		i = 1;

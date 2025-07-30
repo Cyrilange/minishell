@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h" condition pipe
+#include "../../includes/minishell.h"
 
 
 

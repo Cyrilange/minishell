@@ -22,7 +22,7 @@ void initialize_essential_variables(char ***envp)
 	}
 }
 
-t_prompt set_initial_variables(char **argv, char **envp)
+t_prompt set_initial_variables(char **envp)
 {
 	t_prompt prompt;
 
@@ -37,14 +37,14 @@ t_prompt set_initial_variables(char **argv, char **envp)
 	return (prompt);
 }
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
 	t_prompt prompt;
 	char	*input;
 
 	(void)argc;
 	argc = 1;
-	prompt = set_initial_variables(argv, envp);
+	prompt = set_initial_variables(argv);
 	while (1)
 	{
 		set_signals_interactive();
