@@ -59,28 +59,39 @@ char *get_env_var_value(char *var, char **envp)
 
 int builtin_unset(char **command, char ***envp)
 {
-	int	   i;
-	int	   var_position;
-	char  *varname;
+	int		i = 1;
+	int		var_position;
+	char	*varname;
+	char	**new_env;
 
-	if (matrix_len(command) >= 2)
+	if (!command || !command[1])
+		return (0); // rien à unset
+
+	while (command[i])
 	{
-		i = 1;
-		while (command[i] != NULL)
+		if (ft_strchr(command[i], '='))
+			return (0); // mauvaise syntaxe
+
+		varname = get_var_name(command[i]);
+		if (!varname)
+			return (1);
+
+		var_position = is_in_envp(varname, *envp);
+		free(varname);
+
+		if (var_position != -1)
 		{
-			if (strchr(command[i], '=') != NULL)
-				return (0);
-			varname = get_var_name(command[i]);
-			var_position = is_in_envp(varname, *envp);
-			if (var_position == -1)
-				return (0);
-			else
-				*envp = matrix_str_dup(*envp, var_position, NULL);
-			i++;
+			new_env = matrix_str_dup(*envp, var_position, NULL);
+			if (!new_env)
+				return (1);
+			matrix_free(envp); 
+			*envp = new_env;        
 		}
+		i++;
 	}
 	return (0);
 }
+
 
 int builtin_export(char **command, char ***envp)
 {
