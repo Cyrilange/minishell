@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	argc = 1;
 
-	prompt = set_initial_variables(argv, envp);  // 👈 passe l'envp ici
+	prompt = set_initial_variables(argv, envp);
 	while (1)
 	{
 		set_signals_interactive();
@@ -60,7 +60,9 @@ int	main(int argc, char **argv, char **envp)
 		}
 		command(input, &prompt.envp);
 		free(input);
+		
 	}
+	free_prompt(&prompt);
 	rl_clear_history(); 
 	return (0);
 }

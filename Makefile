@@ -13,6 +13,7 @@ OBJ_DIR     = ./obj
 # List source files with path
 SRC_FILES = \
 	src/main.c \
+	src/free_total.c \
 	src/built_ins/builtins.c \
 	src/built_ins/cd.c \
 	src/built_ins/pwd.c \

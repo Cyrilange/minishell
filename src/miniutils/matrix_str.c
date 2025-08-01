@@ -30,46 +30,43 @@ void	matrix_free(char ***matrix)
 	}
 }
 
-char **matrix_str_dup(char **matrix, int replaceline, char *newstr)
+char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
 {
 	char	**newmatrix;
 	int		len_matrix;
-	int		new_len;
 	int		i;
 	int		j;
 
 	i = -1;
 	j = 0;
 	len_matrix = matrix_len(matrix);
-
-	if (newstr == NULL)
-		new_len = len_matrix - 1;
-	else
-		new_len = len_matrix;
-
-	newmatrix = malloc(sizeof(char *) * (new_len + 1));
-	if (newmatrix == NULL)
+	newmatrix = malloc(sizeof(char *) * (len_matrix + 1));
+	if (!newmatrix)
 		return (NULL);
 
 	while (matrix[++i] != NULL)
 	{
 		if (i == replaceline && newstr == NULL)
-			continue ;
+			continue;
 		if (i == replaceline)
-			newmatrix[j] = ft_strdup(newstr);
-		else
-			newmatrix[j] = ft_strdup(matrix[i]);
-
-		if (!newmatrix[j])
 		{
-			matrix_free(&newmatrix);
-			return (NULL);
+			newmatrix[j] = ft_strdup(newstr);
+			if (!newmatrix[j])
+				return (matrix_free(&newmatrix), NULL);
+		}
+		else
+		{
+			newmatrix[j] = ft_strdup(matrix[i]);
+			if (!newmatrix[j])
+				return (matrix_free(&newmatrix), NULL);
 		}
 		j++;
 	}
 	newmatrix[j] = NULL;
 	return (newmatrix);
 }
+
+
 
 
 char	**matrix_str_add(char **matrix, char *newstr)

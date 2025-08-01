@@ -143,6 +143,7 @@ bool		 it_is_path(const char *cmd);
 
 /* ════════════════════════ ⚪ MEMORY ⚪ ════════════════════════ */
 void		free_double_ptr(void **ptr);
+void		free_prompt(t_prompt *prompt);
 
 /* ════════════════════════ 🔴 SIGNALS 🔴 ════════════════════════ */
 
