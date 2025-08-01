@@ -79,48 +79,50 @@ typedef struct s_prompt
 }	t_prompt;
 
 /* ════════════════════════ 🔴 CORE 🔴 ════════════════════════ */
-void	command(char *input, char ***envp);
-char	*get_input(t_prompt *prompt);
-void	cleanup(t_prompt *prompt);
+void		command(char *input, char ***envp);
+char		*get_input(t_prompt *prompt);
+void		cleanup(t_prompt *prompt);
 
 /* ════════════════════════ 🔴 EXECUTION 🔴 ════════════════════════ */
-int		execute_command(char **command, char ***envp);
-void	execute_pipeline(t_cmd_node *cmds, char ***envp);
-int		execute_builtin(char **args, char ***envp);
-bool	is_builtin(char *command);
+int			execute_command(char **command, char ***envp);
+void		execute_pipeline(t_cmd_node *cmds, char ***envp);
+int			execute_builtin(char **args, char ***envp);
+bool		is_builtin(char *command);
 
 /* ════════════════════════ 🔴 REDIRECTIONS 🔴 ════════════════════════ */
-void	redirect_outfile(char *file, bool append);
-void	redirect_infile(char *file);
+void		redirect_outfile(char *file, bool append);
+void		redirect_infile(char *file);
 
 /* ════════════════════════ 🟣 BUILTINS 🟣 ════════════════════════ */
-int		builtin_cd(char *path, char ***envp);
-int		builtin_echo(char **args);
-int		builtin_env(char **envp);
-int		builtin_exit(char **command);
-int		builtin_export(char **command, char ***envp);
-int		builtin_unset(char **command, char ***envp);
-void	update_pwd(char ***envp);
-int		builtin_pwd();
+int			builtin_cd(char *path, char ***envp);
+int			builtin_echo(char **args);
+int			builtin_env(char **envp);
+int			builtin_exit(char **command);
+int			builtin_export(char **command, char ***envp);
+int			builtin_unset(char **command, char ***envp);
+void		update_pwd(char ***envp);
+int			builtin_pwd(void);
 
 /* ════════════════════════ 🟢 ENV UTILS 🟢 ════════════════════════ */
-int		is_in_envp(char *arg, char **envp);
-char	*get_var_name(char *arg);
-char	*get_env_var_value(char *var, char **envp);
-int		is_var_char(char c);
-void	replace_env_var(char ***envp, char *varname, char *value);
+int			is_in_envp(char *arg, char **envp);
+char		*get_var_name(char *arg);
+char		*get_env_var_value(char *var, char **envp);
+int			is_var_char(char c);
+void		replace_env_var(char ***envp, char *varname, char *value);
 
 /* ════════════════════════ 🟡 TOKENIZATION 🟡 ════════════════════════ */
 t_token		**tokenize_input(char *input);
 t_token		*create_token(char *value, t_quotes quote_type);
 t_quotes	get_quote_type(char c);
-char		*expand_variables(const char *str, t_quotes quote_type, char **envp);
+char		*expand_variables(const char *str,
+				t_quotes quote_type, char **envp);
 int			is_special(char c);
 int			is_quote(char c);
 char		*read_multiline_command(t_prompt *prompt);
 
 /* ════════════════════════ 🔵 PARSING & PIPES 🔵 ════════════════════════ */
-t_cmd_node	*parse_pipeline_tokens(t_token **tokens, char **envp, t_pipe_ctx *ctx);
+t_cmd_node	*parse_pipeline_tokens(t_token **tokens,
+				char **envp, t_pipe_ctx *ctx);
 void		condition_while_pipe(t_pipe_ctx *ctx);
 void		add_cmd_node(t_parse_ctx *pctx);
 void		init_parse(t_parse_ctx *pctx);
@@ -137,6 +139,7 @@ void		handle_heredoc_if_needed(t_cmd *cmd);
 int			get_cmd_path(char **envp, char **binpath, char *cmd);
 char		*get_path_variable(char **envp);
 char		*ret_path_if_exists(char **list_of_paths, char *program_name);
+bool		 it_is_path(const char *cmd);
 
 /* ════════════════════════ ⚪ MEMORY ⚪ ════════════════════════ */
 void		free_double_ptr(void **ptr);

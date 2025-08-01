@@ -1,12 +1,12 @@
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
 
-int g_status;
+int	g_status;
 
-void initialize_essential_variables(char ***envp)
+void	initialize_essential_variables(char ***envp)
 {
-	char *shlvl;
-	char *tmp;
+	char	*shlvl;
+	char	*tmp;
 	*envp = matrix_str_add(*envp, "MINISHELL=1");
 	if (is_in_envp("PATH", *envp) == -1)
 		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
@@ -22,10 +22,10 @@ void initialize_essential_variables(char ***envp)
 	}
 }
 
-t_prompt set_initial_variables(char **envp)
+t_prompt	set_initial_variables(char	**argv, char **envp)
 {
-	t_prompt prompt;
-
+	t_prompt	prompt;
+	(void)argv;
 	prompt.input = NULL;
 	prompt.envp = matrix_str_dup(envp, -1, NULL);
 	// if (envp == NULL)
@@ -37,14 +37,15 @@ t_prompt set_initial_variables(char **envp)
 	return (prompt);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	t_prompt prompt;
-	char	*input;
+	t_prompt	prompt;
+	char		*input;
 
 	(void)argc;
 	argc = 1;
-	prompt = set_initial_variables(argv);
+
+	prompt = set_initial_variables(argv, envp);  // 👈 passe l'envp ici
 	while (1)
 	{
 		set_signals_interactive();
@@ -59,27 +60,7 @@ int main(int argc, char **argv)
 		}
 		command(input, &prompt.envp);
 		free(input);
-
 	}
-	printf("\n EXITING\n");
 	rl_clear_history(); 
 	return (0);
 }
-
-// int main(int argc, char **argv, char **envp)
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	char **strs;
-// 	char **tmp;
-// 	// strs = matrix_str_dup(envp, -1, NULL);
-// 	strs = NULL;
-// 	strs = matrix_str_add(strs, "helloworld");
-// 	strs = matrix_str_dup(strs, -1, NULL);
-// 	// strs = matrix_str_add(strs, "anotherworkd");
-// 	(void)tmp;
-// 	(void)strs;
-// 	matrix_free(&strs);
-// 	matrix_free(&tmp);
-// 	return 0;
-// }
