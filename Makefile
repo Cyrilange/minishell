@@ -3,7 +3,7 @@ NAME        = minishell
 LIBFT       = ./includes/libft
 
 CC          = cc
-CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes -fsanitize=address
+CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes #-fsanitize=address
 LDFLAGS     = -lreadline
 
 
