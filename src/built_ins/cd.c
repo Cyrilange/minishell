@@ -7,6 +7,7 @@ static int change_pwd(char ***envp)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
+	free(cwd);
 	cwd = get_env_var_value("PWD", *envp);
 
 	update_pwd(envp);
@@ -31,6 +32,8 @@ static int cd_home(char ***envp)
 	if (chdir(home) == 0)
 	{
 		replace_env_var(envp, "PWD=", home);
+		free(home);
+		free(pwd);
 		return (0);
 	}
 	free(home);

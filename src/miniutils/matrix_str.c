@@ -1,9 +1,9 @@
 #include "miniutils.h"
 #include <stdio.h>
 
-int	matrix_len(char **matrix)
+int matrix_len(char **matrix)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (matrix == NULL)
@@ -13,9 +13,9 @@ int	matrix_len(char **matrix)
 	return (i);
 }
 
-void	matrix_free(char ***matrix)
+void matrix_free(char ***matrix)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (matrix && matrix[0] && matrix[0][i])
@@ -30,12 +30,12 @@ void	matrix_free(char ***matrix)
 	}
 }
 
-char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
+char **matrix_str_dup(char **matrix, int replaceline, char *newstr)
 {
-	char	**newmatrix;
-	int		len_matrix;
-	int		i;
-	int		j;
+	char **newmatrix;
+	int	   len_matrix;
+	int	   i;
+	int	   j;
 
 	i = -1;
 	j = 0;
@@ -66,14 +66,11 @@ char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
 	return (newmatrix);
 }
 
-
-
-
-char	**matrix_str_add(char **matrix, char *newstr)
+char **matrix_str_add(char **matrix, char *newstr)
 {
-	char	**newmatrix;
-	int		len;
-	int		i;
+	char **newmatrix;
+	int	   len;
+	int	   i;
 
 	i = -1;
 	newmatrix = NULL;
@@ -98,13 +95,13 @@ char	**matrix_str_add(char **matrix, char *newstr)
 	return (newmatrix);
 }
 
-void	matrix_str_print(char **matrix)
+void matrix_str_print(char **matrix)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (matrix == NULL)
-		return ;
+		return;
 	while (matrix[i])
 	{
 		printf("%s\n", matrix[i]);

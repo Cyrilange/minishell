@@ -59,10 +59,10 @@ char *get_env_var_value(char *var, char **envp)
 
 int builtin_unset(char **command, char ***envp)
 {
-	int		i = 1;
-	int		var_position;
-	char	*varname;
-	char	**new_env;
+	int	   i = 1;
+	int	   var_position;
+	char  *varname;
+	char **new_env;
 
 	if (!command || !command[1])
 		return (0); // rien à unset
@@ -84,19 +84,19 @@ int builtin_unset(char **command, char ***envp)
 			new_env = matrix_str_dup(*envp, var_position, NULL);
 			if (!new_env)
 				return (1);
-			matrix_free(envp); 
-			*envp = new_env;        
+			matrix_free(envp);
+			*envp = new_env;
 		}
 		i++;
 	}
 	return (0);
 }
 
-
 int builtin_export(char **command, char ***envp)
 {
-	int i;
-	int var_position;
+	int	   i;
+	int	   var_position;
+	char **tmp;
 
 	if (matrix_len(command) >= 2)
 	{
@@ -109,7 +109,11 @@ int builtin_export(char **command, char ***envp)
 			if (var_position == -1)
 				*envp = matrix_str_add(*envp, command[i]);
 			else
-				*envp = matrix_str_dup(*envp, var_position, command[i]);
+			{
+				tmp = matrix_str_dup(*envp, var_position, command[i]);
+				free_double_ptr((void **)*envp);
+				*envp = tmp;
+			}
 		}
 	}
 	return (0);
