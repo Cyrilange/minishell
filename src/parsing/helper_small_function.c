@@ -24,7 +24,7 @@ t_quotes	get_quote_type(char c)
 	return (NO_QUOTE);
 }
 
-t_token	*create_token(char *value, t_quotes quote_type)
+t_token	*   create_token(char *value, t_quotes quote_type)
 {
 	t_token	*token;
 
@@ -33,5 +33,5 @@ t_token	*create_token(char *value, t_quotes quote_type)
 		return (NULL);
 	token->value = value;
 	token->quote_type = quote_type;
-	return (token);
+	return (token);  
 }

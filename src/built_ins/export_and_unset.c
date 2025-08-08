@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-char *get_var_name(char *arg)
+char	*get_var_name(char *arg)
 {
 	int	  i;
 	char *name;
@@ -21,7 +21,7 @@ char *get_var_name(char *arg)
 	return (name);
 }
 
-int is_in_envp(char *arg, char **envp)
+int	is_in_envp(char *arg, char **envp)
 {
 	int	  i;
 	char *var_name;
@@ -43,7 +43,7 @@ int is_in_envp(char *arg, char **envp)
 	return (-1);
 }
 
-char *get_env_var_value(char *var, char **envp)
+char	*get_env_var_value(char *var, char **envp)
 {
 	int	  var_i;
 	int	  begin_str;
@@ -94,8 +94,8 @@ int builtin_unset(char **command, char ***envp)
 
 int builtin_export(char **command, char ***envp)
 {
-	int	   i;
-	int	   var_position;
+	int		i;
+	int		var_position;
 	char **tmp;
 
 	if (matrix_len(command) >= 2)

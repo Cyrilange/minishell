@@ -101,8 +101,7 @@ static t_token *parse_assignment(t_prompt *data)
 				   && !is_special(data->input[data->i]))
 				result[pos++] = data->input[data->i++];
 		}
-	}
-	
+	}	
 	result[pos] = '\0';
 	char *final_result = ft_strdup(result);
 	free(result);

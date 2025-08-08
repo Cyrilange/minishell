@@ -3,6 +3,7 @@
 
 # include <stdbool.h>
 # include "../../includes/libft/libft.h"
+# include "../../includes/minishell.h"
 
 // matrix
 char	**matrix_str_add(char **matrix, char *newstr);
