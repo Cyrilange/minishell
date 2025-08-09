@@ -1,119 +1,69 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenise.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariogo2 <mariogo2@student.42malaga.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 20:48:15 by mariogo2          #+#    #+#             */
+/*   Updated: 2025/08/08 22:30:59 by mariogo2         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-static t_token	*parse_redirection(t_prompt *data)
-{
-	int	start;
-
-
-	start = data->i;
-	if (data->input[data->i + 1]
-		&& data->input[data->i] == data->input[data->i + 1])
-		data->i += 2;
-	else
-		data->i++;
-	return (create_token(ft_strndup(&data->input[start],
-				data->i - start), NO_QUOTE));
-}
-
-
-static t_token	*parse_quote(t_prompt *data)
-{
-	int			start;
-	int			len;
-	t_quotes	quote;
-
-
-	quote = get_quote_type(data->input[data->i]);
-	data->i++;
-	start = data->i;
-	while (data->input[data->i])
-	{
-		if (get_quote_type(data->input[data->i]) == quote)
-			break ;
-		data->i++;
-	}
-	len = data->i - start;
-	if (data->input[data->i])
-		data->i++;
-	return (create_token(ft_strndup(&data->input[start], len), quote));
-}
-
-
-static t_token	*parse_word(t_prompt *data)
-{
-	int	start;
-	int	len;
-
-
-	start = data->i;
-	len = 0;
-	while (data->input[data->i]
-		&& !isspace((unsigned char)data->input[data->i])
-		&& !is_quote(data->input[data->i])
-		&& !is_special(data->input[data->i]))
-	{
-		data->i++;
-		len++;
-	}
-	return (create_token(ft_strndup(&data->input[start], len), NO_QUOTE));
-}
-
-
-static int is_assignment_start(t_prompt *data)
-{
-	int temp_i = data->i;
-
-
-	if (!isalpha(data->input[temp_i]) && data->input[temp_i] != '_')
-		return (0);
-	while (data->input[temp_i] && (isalnum(data->input[temp_i]) || data->input[temp_i] == '_'))
-		temp_i++;
-	return (data->input[temp_i] == '=');
-}
-static t_token *parse_assignment(t_prompt *data)
+static void	parse_quoted_value(t_prompt *data, char *result, int *pos)
 {
 	char	quote;
+
+	quote = data->input[data->i++];
+	while (data->input[data->i] && data->input[data->i] != quote)
+		result[(*pos)++] = data->input[data->i++];
+	if (data->input[data->i] == quote)
+		data->i++;
+}
+
+static void	parse_unquoted_value(t_prompt *data, char *result, int *pos)
+{
+	while (data->input[data->i]
+		&& !isspace((unsigned char)data->input[data->i])
+		&& !is_special(data->input[data->i]))
+	{
+		result[(*pos)++] = data->input[data->i++];
+	}
+}
+
+static t_token	*parse_assignment(t_prompt *data)
+{
 	char	*result;
 	int		pos;
-	
+	char	*final_result;
+
 	pos = 0;
 	result = malloc(1000);
 	while (data->input[data->i] && data->input[data->i] != '=')
 		result[pos++] = data->input[data->i++];
-	
 	if (data->input[data->i] == '=')
 	{
 		result[pos++] = data->input[data->i++];
 		if (data->input[data->i] == '"' || data->input[data->i] == '\'')
-		{
-			quote = data->input[data->i++];
-			while (data->input[data->i] && data->input[data->i] != quote)
-				result[pos++] = data->input[data->i++];
-			if (data->input[data->i] == quote)
-				data->i++;
-		}
+			parse_quoted_value(data, result, &pos);
+		else if (data->input[data->i] == '$')
+			result[pos++] = data->input[data->i++];
 		else
-		{
-			while (data->input[data->i] && !isspace(data->input[data->i]) 
-				   && !is_special(data->input[data->i]))
-				result[pos++] = data->input[data->i++];
-		}
-	}	
+			parse_unquoted_value(data, result, &pos);
+	}
 	result[pos] = '\0';
-	char *final_result = ft_strdup(result);
+	final_result = ft_strdup(result);
 	free(result);
-	return create_token(final_result, NO_QUOTE);
+	return (create_token(final_result, NO_QUOTE));
 }
 
-
-static t_token *extract_token(t_prompt *data)
+static t_token	*extract_token(t_prompt *data)
 {
-	char c;
-	
-	c = data->input[data->i];	
+	char	c;
+
+	c = data->input[data->i];
 	if (is_assignment_start(data))
 		return (parse_assignment(data));
 	if (c == '>' || c == '<')
@@ -128,13 +78,11 @@ static t_token *extract_token(t_prompt *data)
 	return (parse_word(data));
 }
 
-
 t_token	**tokenize_input(char *input)
 {
 	t_prompt	data;
 	t_token		**tokens;
 	int			i;
-
 
 	data.input = input;
 	data.i = 0;
@@ -144,7 +92,7 @@ t_token	**tokenize_input(char *input)
 	i = 0;
 	while (input[data.i])
 	{
-		while (isspace(input[data.i]))
+		while (ft_isspace(input[data.i]))
 			data.i++;
 		if (!input[data.i])
 			break ;

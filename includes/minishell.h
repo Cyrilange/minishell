@@ -119,6 +119,10 @@ char		*expand_variables(const char *str,
 int			is_special(char c);
 int			is_quote(char c);
 char		*read_multiline_command(t_prompt *prompt);
+t_token		*parse_redirection(t_prompt *data);
+t_token		*parse_quote(t_prompt *data);
+t_token		*parse_word(t_prompt *data);
+int			is_assignment_start(t_prompt *data);
 
 /* ════════════════════════ 🔵 PARSING & PIPES 🔵 ════════════════════════ */
 t_cmd_node	*parse_pipeline_tokens(t_token **tokens,
@@ -153,7 +157,7 @@ void		signal_reset_prompt(int signo);
 
 /* ════════════════════════ 🟡 TILDES 🟡 ════════════════════════ */
 void		expand_tildes_in_tokens(t_token **tokens, char **envp);
-char		*expand_tilde(char *path, char **envp);
+char		*expand_tilde(char *path, char **envp, char *home);
 
 /* ════════════════════════ ⚫ HELPERS ⚫ ════════════════════════ */
 char		*append_str(char *base, const char *add);

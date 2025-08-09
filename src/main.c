@@ -1,12 +1,12 @@
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
 
-int g_status;
+int			g_status;
 
-void initialize_essential_variables(char ***envp)
+void	initialize_essential_variables(char ***envp)
 {
-	char *shlvl;
-	char *tmp;
+	char	*shlvl;
+	char	*tmp;
 
 	*envp = matrix_str_add(*envp, "MINISHELL=1");
 	if (is_in_envp("PATH", *envp) == -1)
@@ -23,9 +23,10 @@ void initialize_essential_variables(char ***envp)
 	}
 }
 
-t_prompt set_initial_variables(char **argv, char **envp)
+t_prompt	set_initial_variables(char **argv, char **envp)
 {
-	t_prompt prompt;
+	t_prompt	prompt;
+
 	(void)argv;
 	prompt.input = NULL;
 	prompt.envp = matrix_str_dup(envp, -1, NULL);
@@ -34,14 +35,13 @@ t_prompt set_initial_variables(char **argv, char **envp)
 	return (prompt);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_prompt prompt;
-	char	*input;
+	t_prompt	prompt;
+	char		*input;
 
 	(void)argc;
 	argc = 1;
-
 	prompt = set_initial_variables(argv, envp);
 	while (1)
 	{
@@ -49,11 +49,11 @@ int main(int argc, char **argv, char **envp)
 		input = get_input(&prompt);
 		set_signals_noninteractive();
 		if (!input)
-			continue;
+			continue ;
 		if (!*input)
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		command(input, &prompt.envp);
 		free(input);

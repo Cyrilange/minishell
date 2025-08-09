@@ -3,5 +3,5 @@
 void	cleanup(t_prompt *prompt)
 {
 	free_double_ptr((void **)prompt->envp);
-	return;
+	return ;
 }
