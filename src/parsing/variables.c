@@ -1,10 +1,22 @@
-#include "../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   variables.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariogo2 <mariogo2@student.42malaga.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 20:48:16 by mariogo2          #+#    #+#             */
+/*   Updated: 2025/08/08 22:30:59 by mariogo2         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-extern int g_status;
+#include "../../includes/minishell.h" //varaib;e
 
-static char *process_special_variable(int *i, char *result)
+extern int	g_status;
+
+static char	*process_special_variable(int *i, char *result)
 {
-	char *status_str;
+	char	*status_str;
 
 	status_str = ft_itoa(g_status);
 	result = append_str(result, status_str);
@@ -13,12 +25,13 @@ static char *process_special_variable(int *i, char *result)
 	return (result);
 }
 
-static char *process_variable_name(const char *str, int *i, char *result, char **envp)
+static char	*process_variable_name(const char *str, int *i, char *result,
+		char **envp)
 {
-	int	  len;
-	char *var_name;
-	char *value;
-	bool  freevalue;
+	int		len;
+	char	*var_name;
+	char	*value;
+	bool	freevalue;
 
 	len = 0;
 	var_name = is_var_name(&str[*i], &len);
@@ -40,7 +53,7 @@ static char *process_variable_name(const char *str, int *i, char *result, char *
 	return (result);
 }
 
-static char *process_dollar(const char *str, int *i, char *result, char **envp)
+static char	*process_dollar(const char *str, int *i, char *result, char **envp)
 {
 	(*i)++;
 	if (str[*i] == '?')
@@ -52,21 +65,21 @@ static char *process_dollar(const char *str, int *i, char *result, char **envp)
 	return (result);
 }
 
-static char *process_normal_char(char c, char *result)
+static char	*process_normal_char(char c, char *result)
 {
-	char tmp[2];
+	char	tmp[2];
+	char	*r;
 
 	tmp[0] = c;
 	tmp[1] = 0;
-	char *r = append_str(result, tmp);
+	r = append_str(result, tmp);
 	return (r);
 }
 
-char *expand_variables(const char *str, t_quotes quote_type, char **envp)
+char	*expand_variables(const char *str, t_quotes quote_type, char **envp)
 {
-	int	  i;
-	char *result;
-	char *tmp;
+	int		i;
+	char	*result;
 
 	i = 0;
 	if (quote_type == SINGLE_QUOTE)

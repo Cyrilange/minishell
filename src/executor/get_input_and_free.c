@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_input_and_free.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:15:30 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:15:30 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-void free_cmd_list(t_cmd_node *cmds)
+void	free_cmd_list(t_cmd_node *cmds)
 {
-	t_cmd_node *tmp;
+	t_cmd_node	*tmp;
 	int			i;
 
 	while (cmds)
@@ -14,10 +26,7 @@ void free_cmd_list(t_cmd_node *cmds)
 			{
 				i = 0;
 				while (cmds->cmd->args[i])
-				{
-					free(cmds->cmd->args[i]);
-					i++;
-				}
+					free(cmds->cmd->args[i++]);
 				free(cmds->cmd->args);
 			}
 			free(cmds->cmd->infile);
@@ -30,9 +39,9 @@ void free_cmd_list(t_cmd_node *cmds)
 	}
 }
 
-char *get_input(t_prompt *prompt)
+char	*get_input(t_prompt *prompt)
 {
-	char *input;
+	char	*input;
 
 	input = read_multiline_command(prompt);
 	if (!input)
@@ -43,5 +52,5 @@ char *get_input(t_prompt *prompt)
 	if (*input)
 		add_history(input);
 	prompt->input = input;
-	return input;
+	return (input);
 }

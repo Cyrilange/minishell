@@ -1,23 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 12:04:39 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 12:04:39 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-static int change_pwd(char ***envp)
+static int	change_pwd(char ***envp)
 {
-	char *cwd;
+	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
+	free(cwd);
 	cwd = get_env_var_value("PWD", *envp);
-
 	update_pwd(envp);
 	free(cwd);
 	return (0);
 }
 
-static int cd_home(char ***envp)
+static int	cd_home(char ***envp)
 {
-	char *home;
-	char *pwd;
+	char	*home;
+	char	*pwd;
 
 	home = get_env_var_value("HOME", *envp);
 	pwd = get_env_var_value("PWD", *envp);
@@ -31,6 +43,8 @@ static int cd_home(char ***envp)
 	if (chdir(home) == 0)
 	{
 		replace_env_var(envp, "PWD=", home);
+		free(home);
+		free(pwd);
 		return (0);
 	}
 	free(home);
@@ -38,7 +52,7 @@ static int cd_home(char ***envp)
 	return (1);
 }
 
-static int cd_error(char *path)
+static int	cd_error(char *path)
 {
 	ft_putstr_fd("minishell: cd: ", 2);
 	ft_putstr_fd(path, 2);
@@ -48,9 +62,9 @@ static int cd_error(char *path)
 	return (1);
 }
 
-int builtin_cd(char *path, char ***envp)
+int	builtin_cd(char *path, char ***envp)
 {
-	char *pwd;
+	char	*pwd;
 
 	if (!path || *path == '\0')
 		return (cd_home(envp));

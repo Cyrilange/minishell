@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   miniutils.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:00:20 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:00:20 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINIUTILS_H
 # define MINIUTILS_H
 
-# include <stdbool.h>
 # include "../../includes/libft/libft.h"
+# include "../../includes/minishell.h"
+# include <stdbool.h>
 
 // matrix
 char	**matrix_str_add(char **matrix, char *newstr);

@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   opening_minishell.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:25:31 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:25:31 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
-#include <stdio.h>
 
-extern int g_status;
+extern int	g_status;
 
-static void handle_cmd_node(t_cmd_node *node, char ***envp)
+static void	handle_cmd_node(t_cmd_node *node, char ***envp)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	if (node->cmd->invalid_syntax)
-		return;
+		return ;
 	if (node->cmd->heredoc || node->cmd->infile || node->cmd->outfile)
 	{
 		pid = fork();
@@ -24,17 +35,15 @@ static void handle_cmd_node(t_cmd_node *node, char ***envp)
 			exit(1);
 		}
 		else
-		{
 			waitpid(pid, &g_status, 0);
-		}
 	}
 	else
 		execute_command(node->cmd->args, envp);
 }
 
-static void execute_cmds(t_cmd_node *cmds, char ***envp)
+static void	execute_cmds(t_cmd_node *cmds, char ***envp)
 {
-	t_cmd_node *tmp;
+	t_cmd_node	*tmp;
 
 	tmp = cmds;
 	while (tmp)
@@ -44,9 +53,9 @@ static void execute_cmds(t_cmd_node *cmds, char ***envp)
 	}
 }
 
-static void free_tokens(t_token **tokens)
+static void	free_tokens(t_token **tokens)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (tokens[i])
@@ -58,7 +67,7 @@ static void free_tokens(t_token **tokens)
 	free(tokens);
 }
 
-static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
+static void	execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
 {
 	if (cmds && cmds->next)
 		execute_pipeline(cmds, envp);
@@ -66,22 +75,23 @@ static void execute_parsed_cmds(t_cmd_node *cmds, char ***envp)
 		execute_cmds(cmds, envp);
 }
 
-void command(char *input, char ***envp)
+void	command(char *input, char ***envp)
 {
-	t_token	  **tokens;
-	t_cmd_node *cmds;
-	t_pipe_ctx *ctx;
+	t_token		**tokens;
+	t_cmd_node	*cmds;
+	t_pipe_ctx	*ctx;
 
 	ctx = malloc(sizeof(t_pipe_ctx));
 	if (!input || !*input)
-		return;
+		return ;
 	tokens = tokenize_input(input);
 	if (!tokens)
-		return;
+		return ;
 	cmds = parse_pipeline_tokens(tokens, *envp, ctx);
 	expand_tildes_in_tokens(tokens, *envp);
 	execute_parsed_cmds(cmds, envp);
 	update_pwd(envp);
 	free_cmd_list(cmds);
 	free_tokens(tokens);
+	free(ctx);
 }

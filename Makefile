@@ -2,8 +2,8 @@ NAME        = minishell
 
 LIBFT       = ./includes/libft
 
-CC          = gcc # it has to be cc, not gcc
-CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes
+CC          = cc
+CFLAGS      = -g -Wall -Wextra -I$(LIBFT) -I./includes #-fsanitize=address
 LDFLAGS     = -lreadline
 
 
@@ -13,6 +13,7 @@ OBJ_DIR     = ./obj
 # List source files with path
 SRC_FILES = \
 	src/main.c \
+	src/free_total.c \
 	src/built_ins/builtins.c \
 	src/built_ins/cd.c \
 	src/built_ins/pwd.c \
@@ -22,10 +23,12 @@ SRC_FILES = \
 	src/built_ins/export_and_unset.c \
 	src/miniutils/matrix_str.c \
 	src/miniutils/errors.c \
+	src/miniutils/matrix_add.c \
 	src/parsing/condition_while_pipe.c \
 	src/parsing/handle_redirection.c \
 	src/executor/opening_minishell.c \
 	src/parsing/tokenise.c \
+	src/parsing/helper_tokenise.c \
 	src/parsing/handle_heredoc.c \
 	src/parsing/helper_small_function.c \
 	src/parsing/pipe_helper.c \
@@ -36,6 +39,8 @@ SRC_FILES = \
 	src/parsing/tilde.c \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
+	src/executor/execute_command.c \
+	src/executor/helper_execute_command.c \
 	src/executor/get_input_and_free.c \
 	src/signals/signal.c \
 	src/cleanup.c \
@@ -59,13 +64,14 @@ $(NAME): $(OBJS) $(LIBFT)/libft.a
 $(LIBFT)/libft.a:
 	@$(MAKE) -C $(LIBFT)
 
-# Clean object files
 clean:
+	@echo "Cleaning object files..."
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -C $(LIBFT) clean
 
-# Clean all
 fclean: clean
+	@echo "Cleaning executable and libft..."
+	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT) fclean
 
 # Rebuild everything

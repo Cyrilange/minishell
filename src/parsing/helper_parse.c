@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helper_parse.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariogo2 <mariogo2@student.42malaga.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 20:33:50 by mariogo2          #+#    #+#             */
+/*   Updated: 2025/08/08 22:30:56 by mariogo2         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-static int quotes_are_closed(const char *str)
+static int	quotes_are_closed(const char *str)
 {
-	int single;
-	int dbl;
-	int i;
+	int	single;
+	int	dbl;
+	int	i;
 
 	single = 0;
 	dbl = 0;
@@ -20,17 +32,15 @@ static int quotes_are_closed(const char *str)
 	return (single % 2 == 0 && dbl % 2 == 0);
 }
 
-char *read_multiline_command(t_prompt *prompt)
+char	*read_multiline_command(t_prompt *prompt)
 {
-	char *line;
-	char *full_line;
-	char *tmp;
+	char	*line;
+	char	*full_line;
+	char	*tmp;
 
 	line = readline(PROMPT);
 	if (line == NULL)
-	{
 		cleanup(prompt);
-	}
 	set_signals_noninteractive();
 	if (!line)
 		return (NULL);
@@ -40,10 +50,7 @@ char *read_multiline_command(t_prompt *prompt)
 	{
 		line = readline(">");
 		if (!line)
-		{
-			free(full_line);
-			return (NULL);
-		}
+			return (free(full_line), NULL);
 		tmp = ft_strjoin(full_line, "\n");
 		free(full_line);
 		full_line = ft_strjoin(tmp, line);
@@ -53,9 +60,9 @@ char *read_multiline_command(t_prompt *prompt)
 	return (full_line);
 }
 
-void free_double_ptr(void **ptr)
+void	free_double_ptr(void **ptr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (ptr[i] != NULL)

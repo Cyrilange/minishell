@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   free_total.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-05-11 13:38:09 by csalamit          #+#    #+#             */
-/*   Updated: 2024-05-11 13:38:09 by csalamit         ###   ########.fr       */
+/*   Created: 2025-08-09 11:04:07 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:04:07 by csalamit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+static void	free_envp(char **envp)
 {
-	t_list	*temp;
+	int	i;
 
-	if (!lst || !del)
+	if (!envp)
 		return ;
-	while (*lst)
+	i = 0;
+	while (envp[i])
 	{
-		temp = (*lst)->next;
-		del((*lst)->content);
-		free(*lst);
-		*lst = temp;
+		free(envp[i]);
+		i++;
 	}
+	free(envp);
+}
+
+void	free_prompt(t_prompt *prompt)
+{
+	if (prompt->input)
+		free(prompt->input);
+	free_envp(prompt->envp);
 }

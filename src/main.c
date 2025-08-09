@@ -1,12 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:04:18 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:04:18 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
 
-int g_status;
+int			g_status;
 
-void initialize_essential_variables(char ***envp)
+void	initialize_essential_variables(char ***envp)
 {
-	char *shlvl;
-	char *tmp;
+	char	*shlvl;
+	char	*tmp;
+
 	*envp = matrix_str_add(*envp, "MINISHELL=1");
 	if (is_in_envp("PATH", *envp) == -1)
 		*envp = matrix_str_add(*envp, "PATH=/usr/local/bin:/usr/bin");
@@ -14,33 +27,30 @@ void initialize_essential_variables(char ***envp)
 		*envp = matrix_str_add(*envp, "SHLVL=1");
 	else
 	{
-		shlvl = get_env_var_value("SHLVL", *envp); // ad + 1 for each shell level
+		shlvl = get_env_var_value("SHLVL", *envp);
 		tmp = ft_itoa(ft_atoi(shlvl) + 1);
-		replace_env_var(envp, "SHLVL=", shlvl);
+		replace_env_var(envp, "SHLVL=", tmp);
 		free(tmp);
 		free(shlvl);
 	}
 }
 
-t_prompt set_initial_variables(char **argv, char **envp)
+t_prompt	set_initial_variables(char **argv, char **envp)
 {
-	t_prompt prompt;
+	t_prompt	prompt;
 
+	(void)argv;
 	prompt.input = NULL;
 	prompt.envp = matrix_str_dup(envp, -1, NULL);
-	// if (envp == NULL)
-	// envp = matrix_str_add(envp, "MINISHELL=1");
 	update_pwd(&prompt.envp);
 	initialize_essential_variables(&prompt.envp);
-	// TODO get pid for the minishell process
-	// TODO initialize essential variables
 	return (prompt);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_prompt prompt;
-	char	*input;
+	t_prompt	prompt;
+	char		*input;
 
 	(void)argc;
 	argc = 1;
@@ -51,33 +61,16 @@ int main(int argc, char **argv, char **envp)
 		input = get_input(&prompt);
 		set_signals_noninteractive();
 		if (!input)
-			continue;
+			continue ;
 		if (!*input)
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		command(input, &prompt.envp);
 		free(input);
 	}
-	printf("\n EXITING\n");
+	free_prompt(&prompt);
+	rl_clear_history();
 	return (0);
 }
-
-// int main(int argc, char **argv, char **envp)
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	char **strs;
-// 	char **tmp;
-// 	// strs = matrix_str_dup(envp, -1, NULL);
-// 	strs = NULL;
-// 	strs = matrix_str_add(strs, "helloworld");
-// 	strs = matrix_str_dup(strs, -1, NULL);
-// 	// strs = matrix_str_add(strs, "anotherworkd");
-// 	(void)tmp;
-// 	(void)strs;
-// 	matrix_free(&strs);
-// 	matrix_free(&tmp);
-// 	return 0;
-// }

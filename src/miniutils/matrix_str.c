@@ -1,5 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix_str.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 12:06:48 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 12:06:48 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "miniutils.h"
 #include <stdio.h>
+
+static int	ft_strdup_into(char **dst, const char *src);
 
 int	matrix_len(char **matrix)
 {
@@ -30,74 +44,42 @@ void	matrix_free(char ***matrix)
 	}
 }
 
-char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
+static char	**dup_with_replacement(char **matrix, int replaceline, char *newstr)
 {
 	char	**newmatrix;
 	int		len_matrix;
-	int		i;
-	int		j;
+	int		i[2];
 
-	j = 0;
-	i = -1;
+	i[0] = -1;
+	i[1] = 0;
 	len_matrix = matrix_len(matrix);
-	newmatrix = malloc(sizeof(*newmatrix) * (len_matrix + 1));
-	if (newmatrix == NULL)
-		return (NULL);
-	while (matrix[++i] != NULL)
-	{
-		if (i == replaceline && newstr == NULL)
-			continue ;
-		if (i == replaceline)
-			newmatrix[j] = ft_strdup(newstr);
-		else
-			newmatrix[j] = ft_strdup(matrix[i]);
-		if (newmatrix == NULL)
-			return (matrix_free(&newmatrix), NULL);
-		j++;
-	}
-	newmatrix[i] = NULL;
-	return (newmatrix);
-}
-
-char	**matrix_str_add(char **matrix, char *newstr)
-{
-	char	**newmatrix;
-	int		len;
-	int		i;
-
-	i = -1;
-	newmatrix = NULL;
-	if (!newstr)
-		return (matrix);
-	len = matrix_len(matrix);
-	newmatrix = malloc(sizeof(char *) * (len + 2));
-	newmatrix[len + 1] = NULL;
+	newmatrix = malloc(sizeof(char *) * (len_matrix + 1));
 	if (!newmatrix)
-		return (matrix);
-	while (++i < len)
+		return (NULL);
+	while (matrix[++i[0]] != NULL)
 	{
-		newmatrix[i] = ft_strdup(matrix[i]);
-		if (!newmatrix[i])
+		if (i[0] == replaceline && newstr == NULL)
+			continue ;
+		if (i[0] == replaceline)
 		{
-			matrix_free(&matrix);
-			matrix_free(&newmatrix);
+			if (ft_strdup_into(&newmatrix[i[1]], newstr) == 0)
+				return (matrix_free(&newmatrix), NULL);
 		}
+		else if (ft_strdup_into(&newmatrix[i[1]], matrix[i[0]]) == 0)
+			return (matrix_free(&newmatrix), NULL);
+		i[1]++;
 	}
-	newmatrix[i] = ft_strdup(newstr);
-	matrix_free(&matrix);
+	newmatrix[i[1]] = NULL;
 	return (newmatrix);
 }
 
-void	matrix_str_print(char **matrix)
+static int	ft_strdup_into(char **dst, const char *src)
 {
-	int	i;
+	*dst = ft_strdup(src);
+	return (*dst != NULL);
+}
 
-	i = 0;
-	if (matrix == NULL)
-		return ;
-	while (matrix[i])
-	{
-		printf("%s\n", matrix[i]);
-		i++;
-	}
+char	**matrix_str_dup(char **matrix, int replaceline, char *newstr)
+{
+	return (dup_with_replacement(matrix, replaceline, newstr));
 }
