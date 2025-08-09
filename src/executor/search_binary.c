@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   search_binary.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:31:53 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:31:53 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-char *get_path_variable(char **envp)
+char	*get_path_variable(char **envp)
 {
-	int	  i;
-	char *variable;
+	int		i;
+	char	*variable;
 
 	i = 0;
 	while (envp[i] != NULL)
@@ -17,11 +29,11 @@ char *get_path_variable(char **envp)
 	return (NULL);
 }
 
-char *ret_path_if_exists(char **list_of_paths, char *program_name)
+char	*ret_path_if_exists(char **list_of_paths, char *program_name)
 {
-	int	  i;
-	char *program_path;
-	char *temp;
+	int		i;
+	char	*program_path;
+	char	*temp;
 
 	i = 0;
 	while (list_of_paths[i] != NULL)
@@ -37,10 +49,10 @@ char *ret_path_if_exists(char **list_of_paths, char *program_name)
 	return (NULL);
 }
 
-int get_cmd_path(char **envp, char **binpath, char *cmd)
+int	get_cmd_path(char **envp, char **binpath, char *cmd)
 {
-	char **list_of_paths;
-	char  *single_line_path;
+	char	**list_of_paths;
+	char	*single_line_path;
 
 	single_line_path = get_path_variable(envp);
 	if (single_line_path == NULL)

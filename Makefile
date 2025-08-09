@@ -40,6 +40,7 @@ SRC_FILES = \
 	src/executor/redirections.c \
 	src/executor/search_binary.c \
 	src/executor/execute_command.c \
+	src/executor/helper_execute_command.c \
 	src/executor/get_input_and_free.c \
 	src/signals/signal.c \
 	src/cleanup.c \

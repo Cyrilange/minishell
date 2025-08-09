@@ -25,8 +25,7 @@ static void	parse_quoted_value(t_prompt *data, char *result, int *pos)
 
 static void	parse_unquoted_value(t_prompt *data, char *result, int *pos)
 {
-	while (data->input[data->i]
-		&& !isspace((unsigned char)data->input[data->i])
+	while (data->input[data->i] && !isspace((unsigned char)data->input[data->i])
 		&& !is_special(data->input[data->i]))
 	{
 		result[(*pos)++] = data->input[data->i++];

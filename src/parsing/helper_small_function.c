@@ -24,8 +24,8 @@ int	is_quote(char c)
 
 int	is_special(char c)
 {
-	return (c == '|' || c == '<' || c == '>' || c == '&'
-		|| c == ';' || c == '(' || c == ')');
+	return (c == '|' || c == '<' || c == '>' || c == '&' || c == ';' || c == '('
+		|| c == ')');
 }
 
 t_quotes	get_quote_type(char c)

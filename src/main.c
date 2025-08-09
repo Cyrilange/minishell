@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csalamit <csalamit@student.42malaga.com>   #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-08-09 11:04:18 by csalamit          #+#    #+#             */
+/*   Updated: 2025-08-09 11:04:18 by csalamit         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 #include "miniutils/miniutils.h"
 
@@ -16,7 +28,7 @@ void	initialize_essential_variables(char ***envp)
 	else
 	{
 		shlvl = get_env_var_value("SHLVL", *envp);
-		tmp = ft_itoa(ft_atoi(shlvl) + 1); // ad + 1 for each shell level
+		tmp = ft_itoa(ft_atoi(shlvl) + 1);
 		replace_env_var(envp, "SHLVL=", tmp);
 		free(tmp);
 		free(shlvl);

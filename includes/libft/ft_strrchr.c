@@ -18,20 +18,20 @@ char	*ft_strrchr(const char *s, int c)
 	char			*result;
 	char			j;
 
-	j = (char) c;
+	j = (char)c;
 	result = NULL;
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == j)
 		{
-			result = ((char *) &s[i]);
+			result = ((char *)&s[i]);
 		}
 		i++;
 	}
 	if (s[i] == j)
 	{
-		result = ((char *) &s[i]);
+		result = ((char *)&s[i]);
 	}
 	return (result);
 }
