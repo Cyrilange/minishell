@@ -18,7 +18,7 @@ t_token	*parse_redirection(t_prompt *data)
 
 	start = data->i;
 	if (data->input[data->i + 1] && data->input[data->i] == data->input[data->i
-		+ 1])
+			+ 1])
 		data->i += 2;
 	else
 		data->i++;

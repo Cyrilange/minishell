@@ -66,7 +66,7 @@ static char	**dup_with_replacement(char **matrix, int replaceline, char *newstr)
 				return (matrix_free(&newmatrix), NULL);
 		}
 		else if (ft_strdup_into(&newmatrix[i[1]], matrix[i[0]]) == 0)
-				return (matrix_free(&newmatrix), NULL);
+			return (matrix_free(&newmatrix), NULL);
 		i[1]++;
 	}
 	newmatrix[i[1]] = NULL;

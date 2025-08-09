@@ -39,7 +39,8 @@ void	condition_while_pipe(t_pipe_ctx *ctx)
 		ctx->pctx.cmd->heredoc = 1;
 		ctx->i++;
 		if (ctx->tokens[ctx->i])
-			ctx->pctx.cmd->heredoc_delimiter = ft_strdup(ctx->tokens[ctx->i++]->value);
+			ctx->pctx.cmd->heredoc_delimiter
+				= ft_strdup(ctx->tokens[ctx->i++]->value);
 	}
 	else if (is_pipe_token(token))
 	{

@@ -28,7 +28,8 @@ int	builtin_exit(char **command)
 		{
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(command[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2), exit(2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			exit(2);
 		}
 		i++;
 	}
